@@ -38,6 +38,7 @@ model Movie {
   releaseDate DateTime
   budget      Int
   banner      String
+  trailerUrl  String
 
   userId String
   user   User   @relation(fields: [userId], references: [id])

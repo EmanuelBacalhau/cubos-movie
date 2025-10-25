@@ -2,7 +2,7 @@ import { Controller } from '@application/contracts/http/controller';
 import { Injectable } from '@kernel/decorators/injectable';
 import { Schema } from '@kernel/decorators/schema';
 import { CreateUserSchema } from './schemas/create-user-schema';
-import { SignInUseCase } from '@application/useCases/sign-in-use-case';
+import { SignInUseCase } from '@application/useCases/users/sign-in-use-case';
 import { signInSchema } from './schemas/sign-in-schema';
 
 @Injectable()

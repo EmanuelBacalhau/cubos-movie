@@ -1,6 +1,6 @@
 import { Controller } from '@application/contracts/http/controller';
 import { User } from '@application/entities/user';
-import { CreateUserUseCase } from '@application/useCases/create-user-use-case';
+import { CreateUserUseCase } from '@application/useCases/users/create-user-use-case';
 import { Injectable } from '@kernel/decorators/injectable';
 import { Schema } from '@kernel/decorators/schema';
 import { CreateUserSchema, createUserSchema } from './schemas/create-user-schema';
