@@ -4,17 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/main/server.js",
+    "build": "tsup",
+    "start": "node dist/main/server.mjs",
     "dev": "tsx --watch src/main/server.ts",
     "typecheck": "tsc --noEmit"
-  },
-  "_moduleAliases": {
-    "@application": "dist/application",
-    "@infra": "dist/infra",
-    "@kernel": "dist/kernel",
-    "@main": "dist/main",
-    "@shared": "dist/shared"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +18,7 @@
     "@aws-sdk/client-sqs": "^3.879.0",
     "@fastify/jwt": "^10.0.0",
     "@prisma/client": "^6.18.0",
+    "@swc/core": "^1.13.5",
     "dotenv": "^17.2.3",
     "fastify": "^5.5.0",
     "module-alias": "^2.2.3",
@@ -35,6 +29,7 @@
     "@biomejs/biome": "2.2.2",
     "@types/node": "^24.3.0",
     "prisma": "^6.18.0",
+    "tsup": "^8.5.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.2"
   }

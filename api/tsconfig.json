@@ -15,7 +15,7 @@
 		"strict": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
-		"moduleResolution": "node16",
+		"moduleResolution": "nodenext", // Corrigido para ser compatível com "module"
 
 		"baseUrl": ".",
 		"paths": {
