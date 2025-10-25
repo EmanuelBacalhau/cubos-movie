@@ -1,8 +1,8 @@
 import { Controller } from '@application/contracts/http/controller';
+import { SignInUseCase } from '@application/useCases/users/sign-in-use-case';
 import { Injectable } from '@kernel/decorators/injectable';
 import { Schema } from '@kernel/decorators/schema';
 import { CreateUserSchema } from './schemas/create-user-schema';
-import { SignInUseCase } from '@application/useCases/users/sign-in-use-case';
 import { signInSchema } from './schemas/sign-in-schema';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class SignInController extends Controller<'public', unknown> {
 
 	override async handle(
 		request: Controller.Request<'public', CreateUserSchema>
-	): Promise<Controller.Response<HelloController.Response>> {
+	): Promise<Controller.Response<SignInController.Response>> {
 		const response = await this.signInUseCase.execute(request.body);
 
 		return {
@@ -24,8 +24,8 @@ export class SignInController extends Controller<'public', unknown> {
 	}
 }
 
-export namespace HelloController {
+export namespace SignInController {
 	export type Response = {
-    token: string;
-  };
+		token: string;
+	};
 }
