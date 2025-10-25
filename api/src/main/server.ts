@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import 'module-alias/register';
+import 'dotenv/config';
 
 import fastifyJwt from '@fastify/jwt';
 import { fastify } from 'fastify';
