@@ -2,8 +2,13 @@ import z from 'zod';
 
 export const findMoviesSchema = z.object({
 	title: z.string().min(1, '"title" must be at least 1 character').optional(),
-	genderId: z.cuid('"genderId" must be a valid cuid').optional(),
-	realeseDate: z.coerce.date('"realeseDate" must be a valid date').optional(),
+	genreId: z.cuid('"genderId" must be a valid cuid').optional(),
+	realeseStartDate: z.coerce
+		.date('"realeseDate" must be a valid date')
+		.optional(),
+	realeseEndDate: z.coerce
+		.date('"realeseDate" must be a valid date')
+		.optional(),
 	duration: z
 		.number()
 		.min(1, '"duration" must be at least 1 minute')

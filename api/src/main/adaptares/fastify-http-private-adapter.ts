@@ -7,7 +7,9 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import { ZodError } from 'zod';
 import { fastifyErrorResponse } from './fastify-error-response';
 
-export function fastifyHttpAdapter(controllerImp: Controller<any, unknown>) {
+export function fastifyHttpPrivateAdapter(
+	controllerImp: Controller<any, unknown>
+) {
 	return async (request: FastifyRequest, reply: FastifyReply) => {
 		try {
 			const body = request.body as Record<string, unknown>;
@@ -15,13 +17,12 @@ export function fastifyHttpAdapter(controllerImp: Controller<any, unknown>) {
 			const queryParams = request.query as Record<string, unknown>;
 
 			let accountId = null;
-			if (request.headers.authorization) {
-				try {
-					await request.jwtVerify();
-				} catch {
-					throw new Unauthorized();
-				}
+
+			try {
+				await request.jwtVerify();
 				accountId = (request.user as unknown as any).sub;
+			} catch {
+				throw new Unauthorized();
 			}
 
 			const response = await controllerImp.execute({

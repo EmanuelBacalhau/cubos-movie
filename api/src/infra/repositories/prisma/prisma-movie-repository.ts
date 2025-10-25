@@ -16,8 +16,21 @@ export class PrismaMovieRepository implements IMovieRepository {
 		return new Movie({ ...movie }, movie.id);
 	}
 
-	async count(): Promise<number> {
-		const total = await prismaClient.movie.count();
+	async count(props: SearchMovieParams): Promise<number> {
+		const total = await prismaClient.movie.count({
+			where: {
+				title: {
+					contains: props.title,
+					mode: 'insensitive',
+				},
+				genreId: props.genreId,
+				duration: props.duration,
+				releaseDate: {
+					gte: props.realeseStartDate,
+					lte: props.realeseEndDate,
+				},
+			},
+		});
 		return total;
 	}
 
@@ -49,7 +62,7 @@ export class PrismaMovieRepository implements IMovieRepository {
 					contains: props.title,
 					mode: 'insensitive',
 				},
-				genreId: props.genderId,
+				genreId: props.genreId,
 				duration: props.duration,
 				releaseDate: {
 					gte: props.realeseStartDate,

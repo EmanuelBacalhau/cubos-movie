@@ -18,7 +18,7 @@ export class FindMovieUseCase {
 
 		const movies = await this.movieRepository.find(data);
 
-		const total = await this.movieRepository.count();
+		const total = await this.movieRepository.count(data);
 		const totalPages = Math.ceil(total / data.perPage);
 
 		return {

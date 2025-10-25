@@ -2,7 +2,7 @@ import { Movie } from '@application/entities/movie';
 
 export interface SearchMovieParams {
 	title?: string;
-	genderId?: string;
+	genreId?: string;
 	realeseStartDate?: Date;
 	realeseEndDate?: Date;
 	duration?: number;
@@ -17,5 +17,5 @@ export interface IMovieRepository {
 	find(props: SearchMovieParams): Promise<Movie[]>;
 	update(movie: Movie.UpdateInput): Promise<void>;
 	delete(id: string): Promise<void>;
-	count(): Promise<number>;
+	count(props: SearchMovieParams): Promise<number>;
 }

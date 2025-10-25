@@ -2,20 +2,20 @@ import { CreateMovieController } from '@application/controllers/movies/create-mo
 import { FindMoviesController } from '@application/controllers/movies/find-movies-controller';
 import { UpdateMovieController } from '@application/controllers/movies/update-movie-controller';
 import { container } from '@kernel/di/container';
-import { fastifyHttpAdapter } from '@main/adaptares/fastify-http-adapter';
+import { fastifyHttpPrivateAdapter } from '@main/adaptares/fastify-http-private-adapter';
 import { FastifyInstance } from 'fastify';
 
 export function registerMovieRoutes(app: FastifyInstance): void {
 	app.post(
 		'/movies',
-		fastifyHttpAdapter(container.resolve(CreateMovieController))
+		fastifyHttpPrivateAdapter(container.resolve(CreateMovieController))
 	);
 	app.patch(
 		'/movies',
-		fastifyHttpAdapter(container.resolve(UpdateMovieController))
+		fastifyHttpPrivateAdapter(container.resolve(UpdateMovieController))
 	);
 	app.get(
 		'/movies',
-		fastifyHttpAdapter(container.resolve(FindMoviesController))
+		fastifyHttpPrivateAdapter(container.resolve(FindMoviesController))
 	);
 }
