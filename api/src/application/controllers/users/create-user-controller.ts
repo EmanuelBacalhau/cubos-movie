@@ -15,11 +15,10 @@ export class CreateUserController extends Controller<'public', unknown> {
 	override async handle(
 		request: Controller.Request<'public', CreateUserSchema>
 	): Promise<Controller.Response<HelloController.Response>> {
-
 		const response = await this.createUserUseCase.execute(request.body);
 
 		return {
-			statusCode: 200,
+			statusCode: 201,
 			body: response,
 		};
 	}
