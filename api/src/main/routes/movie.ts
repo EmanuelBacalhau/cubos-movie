@@ -1,4 +1,5 @@
 import { CreateMovieController } from '@application/controllers/movies/create-movie-controller';
+import { DeleteMovieController } from '@application/controllers/movies/delete-movie-controller';
 import { FindMoviesController } from '@application/controllers/movies/find-movies-controller';
 import { UpdateMovieController } from '@application/controllers/movies/update-movie-controller';
 import { container } from '@kernel/di/container';
@@ -17,5 +18,9 @@ export function registerMovieRoutes(app: FastifyInstance): void {
 	app.get(
 		'/movies',
 		fastifyHttpPrivateAdapter(container.resolve(FindMoviesController))
+	);
+	app.delete(
+		'/movies/:id',
+		fastifyHttpPrivateAdapter(container.resolve(DeleteMovieController))
 	);
 }

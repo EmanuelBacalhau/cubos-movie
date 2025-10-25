@@ -26,8 +26,6 @@ export function fastifyHttpPublicAdapter(
 				.status(response.statusCode)
 				.send(response.body ? response.body : undefined);
 		} catch (error) {
-			console.error(error);
-
 			if (error instanceof ZodError) {
 				return fastifyErrorResponse(reply, {
 					statusCode: 400,
@@ -54,6 +52,8 @@ export function fastifyHttpPublicAdapter(
 					message: error.message,
 				});
 			}
+
+			console.error(error);
 
 			return fastifyErrorResponse(reply, {
 				statusCode: 500,

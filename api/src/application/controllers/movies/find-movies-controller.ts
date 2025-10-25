@@ -3,10 +3,7 @@ import { Movie } from '@application/entities/movie';
 import { FindMovieUseCase } from '@application/useCases/movies/find-movies-use-case';
 import { Injectable } from '@kernel/decorators/injectable';
 import { Pagination } from '@shared/types/pagination';
-import {
-	FindMoviesSchema,
-	findMoviesSchema,
-} from './schemas/find-movies-schema';
+import { findMoviesSchema } from './schemas/find-movies-schema';
 
 @Injectable()
 export class FindMoviesController extends Controller<'private', unknown> {
@@ -15,7 +12,7 @@ export class FindMoviesController extends Controller<'private', unknown> {
 	}
 
 	override async handle(
-		request: Controller.Request<'private', FindMoviesSchema>
+		request: Controller.Request<'private'>
 	): Promise<Controller.Response<FindMoviesController.Response>> {
 		const queryParams = findMoviesSchema.parse(request.queryParams);
 

@@ -36,8 +36,6 @@ export function fastifyHttpPrivateAdapter(
 				.status(response.statusCode)
 				.send(response.body ? response.body : undefined);
 		} catch (error) {
-			console.error(error);
-
 			if (error instanceof ZodError) {
 				return fastifyErrorResponse(reply, {
 					statusCode: 400,
@@ -64,6 +62,8 @@ export function fastifyHttpPrivateAdapter(
 					message: error.message,
 				});
 			}
+
+			console.error(error);
 
 			return fastifyErrorResponse(reply, {
 				statusCode: 500,
