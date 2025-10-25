@@ -5,11 +5,11 @@ export class Forbidden extends HttpError {
 	public override statusCode = 403;
 	public override code: ErrorCode;
 
-	constructor() {
+	constructor(message?: string) {
 		super();
 
 		this.name = 'Forbidden';
 		this.code = ErrorCode.FORBIDDEN;
-		this.message = 'Forbidden';
+		this.message = message || 'Forbidden';
 	}
 }

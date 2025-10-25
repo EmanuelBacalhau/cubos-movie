@@ -13,6 +13,14 @@ export class PrismaMovieRepository implements IMovieRepository {
 		return new Movie({ ...user }, user.id);
 	}
 
+  async findById(id: string): Promise<Movie | null> {
+    const movie = await prismaClient.movie.findUnique({
+      where: { id },
+    });
+
+    return movie ? new Movie({ ...movie }, movie.id) : null;
+  }
+
   async findByTitle(title: string): Promise<Movie | null> {
     const movie = await prismaClient.movie.findFirst({
       where: { title },

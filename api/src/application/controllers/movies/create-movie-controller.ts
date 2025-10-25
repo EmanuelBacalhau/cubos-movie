@@ -1,9 +1,12 @@
 import { Controller } from '@application/contracts/http/controller';
+import { Movie } from '@application/entities/movie';
+import { CreateMovieUseCase } from '@application/useCases/movies/create-movie-use-case';
 import { Injectable } from '@kernel/decorators/injectable';
 import { Schema } from '@kernel/decorators/schema';
-import { CreateMovieSchema, createMovieSchema } from './schemas/create-movie-schema';
-import { CreateMovieUseCase } from '@application/useCases/movies/create-movie-use-case';
-import { Movie } from '@application/entities/movie';
+import {
+	CreateMovieSchema,
+	createMovieSchema,
+} from './schemas/create-movie-schema';
 
 @Injectable()
 @Schema(createMovieSchema)
@@ -16,9 +19,9 @@ export class CreateMovieController extends Controller<'private', unknown> {
 		request: Controller.Request<'private', CreateMovieSchema>
 	): Promise<Controller.Response<HelloController.Response>> {
 		const response = await this.createMovieUseCase.execute({
-      ...request.body,
-      userId: request.accountId,
-    });
+			...request.body,
+			userId: request.accountId,
+		});
 
 		return {
 			statusCode: 201,
