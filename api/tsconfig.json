@@ -9,7 +9,7 @@
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 
-    "rootDir": "./src",
+		"rootDir": "./src",
 		"outDir": "./dist",
 
 		"strict": true,
@@ -23,8 +23,10 @@
 			"@infra/*": ["src/infra/*"],
 			"@kernel/*": ["src/kernel/*"],
 			"@main/*": ["src/main/*"],
-			"@shared/*": ["src/shared/*"]
+			"@shared/*": ["src/shared/*"],
+			"@prisma/generated": ["prisma/generated/*"]
 		}
 	},
-  "include": ["src/**/*"],
+	"include": ["src/**/*"],
+	"exclude": ["node_modules", "dist", "prisma/generated"]
 }
