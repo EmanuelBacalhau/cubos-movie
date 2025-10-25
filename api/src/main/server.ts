@@ -3,8 +3,9 @@ import 'reflect-metadata';
 
 import fastifyJwt from '@fastify/jwt';
 import { fastify } from 'fastify';
-import { registerUserRoutes } from './routes/user';
-import { registerMovieRoutes } from './routes/movie';
+import { registerGenreRoutes } from './routes/genres';
+import { registerMovieRoutes } from './routes/movies';
+import { registerUserRoutes } from './routes/users';
 
 export const fastifyServer = fastify();
 
@@ -14,6 +15,7 @@ fastifyServer.register(fastifyJwt, {
 
 registerUserRoutes(fastifyServer);
 registerMovieRoutes(fastifyServer);
+registerGenreRoutes(fastifyServer);
 
 const PORT = Number(process.env.PORT);
 fastifyServer.listen({ port: PORT }).then(() => {
