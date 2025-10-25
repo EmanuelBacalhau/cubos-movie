@@ -1,4 +1,5 @@
 import { CreateMovieController } from '@application/controllers/movies/create-movie-controller';
+import { FindMoviesController } from '@application/controllers/movies/find-movies-controller';
 import { UpdateMovieController } from '@application/controllers/movies/update-movie-controller';
 import { container } from '@kernel/di/container';
 import { fastifyHttpAdapter } from '@main/adaptares/fastify-http-adapter';
@@ -12,5 +13,9 @@ export function registerMovieRoutes(app: FastifyInstance): void {
 	app.patch(
 		'/movies',
 		fastifyHttpAdapter(container.resolve(UpdateMovieController))
+	);
+	app.get(
+		'/movies',
+		fastifyHttpAdapter(container.resolve(FindMoviesController))
 	);
 }

@@ -16,7 +16,7 @@ export class UpdateMovieController extends Controller<'private', unknown> {
 
 	override async handle(
 		request: Controller.Request<'private', UpdateMovieSchema>
-	): Promise<Controller.Response<CreateMovieController.Response>> {
+	): Promise<Controller.Response<UpdateMovieController.Response>> {
 		await this.updateMovieUseCase.execute({
 			...request.body,
 			userId: request.accountId,
@@ -28,6 +28,6 @@ export class UpdateMovieController extends Controller<'private', unknown> {
 	}
 }
 
-export namespace CreateMovieController {
+export namespace UpdateMovieController {
 	export type Response = null;
 }

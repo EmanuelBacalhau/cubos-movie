@@ -1,4 +1,5 @@
 import { Controller } from '@application/contracts/http/controller';
+import { ApplicationError } from '@application/errors/application/application-error';
 import { ErrorCode } from '@application/errors/error-code';
 import { HttpError } from '@application/errors/http/http-error';
 import { Unauthorized } from '@application/errors/http/unauthorized';
@@ -44,6 +45,14 @@ export function fastifyHttpAdapter(controllerImp: Controller<any, unknown>) {
 						field: issue.path.join('.'),
 						message: issue.message,
 					})),
+				});
+			}
+
+			if (error instanceof ApplicationError) {
+				return fastifyErrorResponse(reply, {
+					statusCode: error.statusCode ?? 400,
+					code: error.code,
+					message: error.message,
 				});
 			}
 

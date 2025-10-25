@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "tsup",
+    "build:watch": "tsup --watch",
     "start": "node dist/main/server.mjs",
-    "dev": "tsx --watch src/main/server.ts",
+    "dev": "node --watch dist/main/server.mjs",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [],

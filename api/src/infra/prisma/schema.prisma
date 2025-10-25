@@ -36,6 +36,7 @@ model Movie {
   title       String
   description String
   releaseDate DateTime
+  duration    Int
   budget      Int
   banner      String
   trailerUrl  String
