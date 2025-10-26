@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { destroyCookie, parseCookies, setCookie } from 'nookies';
 import { useCallback, useEffect, useState } from 'react';
 import { localStorageKeys } from '@/config/localstorage-keys';
 import { AuthContext, AuthProviderProps } from '@/contexts/auth-context';
@@ -11,7 +12,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 	const router = useRouter();
 
 	const [signedIn, setSignedIn] = useState<boolean>(() => {
-		const storedAccessToken = localStorage.getItem(localStorageKeys.AUTH_TOKEN);
+		const cookies = parseCookies();
+		const storedAccessToken = cookies[localStorageKeys.AUTH_TOKEN];
 		return !!storedAccessToken;
 	});
 
@@ -22,21 +24,29 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 		staleTime: Infinity,
 	});
 
-	const signIn = useCallback((accessToken: string) => {
-		localStorage.setItem(localStorageKeys.AUTH_TOKEN, accessToken);
-		httpClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-		setSignedIn(true);
-	}, []);
+	const signIn = useCallback(
+		(accessToken: string) => {
+			const SEVEN_DAYS_IN_SECONDS = 60 * 60 * 24 * 7;
+			setCookie(null, localStorageKeys.AUTH_TOKEN, accessToken, {
+				path: '/',
+				maxAge: SEVEN_DAYS_IN_SECONDS,
+			});
+			httpClient.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+			setSignedIn(true);
+			router.push('/');
+		},
+		[router]
+	);
 
 	const clearMeCache = useCallback(() => {
 		queryClient.removeQueries({ queryKey: ['me'] });
 	}, []);
 
 	const signOut = useCallback(() => {
-		localStorage.removeItem(localStorageKeys.AUTH_TOKEN);
-		setSignedIn(true);
+		destroyCookie(null, localStorageKeys.AUTH_TOKEN, { path: '/' });
+		setSignedIn(false);
 		clearMeCache();
-		router.push('/');
+		router.push('/sign-in');
 	}, [router, clearMeCache]);
 
 	useEffect(() => {
@@ -47,7 +57,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
 	return (
 		<AuthContext.Provider
-			value={{ signedIn: isSuccess && signedIn, signIn, signOut }}
+			value={{ signedIn: signedIn && isSuccess, signIn, signOut }}
 		>
 			{children}
 		</AuthContext.Provider>

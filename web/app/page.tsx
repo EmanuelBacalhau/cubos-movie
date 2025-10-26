@@ -1,9 +1,7 @@
-import { CardFormSignIn } from '@/components/auth/card-form-sign-in';
-
-const Home = async () => {
+const Home = () => {
 	return (
-		<div className="flex items-center justify-center flex-1">
-			<CardFormSignIn />
+		<div>
+			<h1>Teste</h1>
 		</div>
 	);
 };
