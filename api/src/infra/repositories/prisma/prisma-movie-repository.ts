@@ -177,8 +177,6 @@ export class PrismaMovieRepository implements IMovieRepository {
 					releaseDate: movie.releaseDate,
 					budget: movie.budget,
 					duration: movie.duration,
-					banner: movie.banner,
-					cover: movie.cover,
 					profit: movie.profit,
 					trailerUrl: movie.trailerUrl,
 					revenue: movie.revenue,

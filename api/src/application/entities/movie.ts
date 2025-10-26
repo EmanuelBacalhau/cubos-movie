@@ -109,7 +109,6 @@ export namespace Movie {
 
 	export type UpdateInput = {
 		title?: string;
-		cover?: string;
 		votes?: number;
 		language?: string;
 		revenue?: number;
@@ -117,7 +116,6 @@ export namespace Movie {
 		description?: string;
 		releaseDate?: Date;
 		budget?: number;
-		banner?: string;
 		duration?: number;
 		trailerUrl?: string;
 		genres?: string[];

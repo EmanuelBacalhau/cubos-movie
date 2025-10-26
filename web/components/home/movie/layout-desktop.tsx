@@ -1,11 +1,20 @@
 import Image from 'next/image';
+import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+	Sheet,
+	SheetContent,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger,
+} from '@/components/ui/sheet';
 import { Movie } from '@/services/types/movie';
 import { formatCurrencyToShort } from '@/utils/format-currency-to-short';
 import { formatHours } from '@/utils/format-hours';
 import { CircleVotes } from '../user-list/circle-votes';
 import { CardDetails } from './card-detail';
+import { FormMovie } from './form-movie';
 
 type LayoutMobileProps = {
 	data: Movie;
@@ -16,6 +25,8 @@ export const LayoutDesktop = ({
 	data,
 	handleDeleteMovie,
 }: LayoutMobileProps) => {
+	const [isSheetOpen, setIsSheetOpen] = useState(false);
+
 	return (
 		<div className="space-y-8 hidden lg:flex flex-col">
 			<div className="relative w-full p-8">
@@ -43,13 +54,40 @@ export const LayoutDesktop = ({
 								Deletar
 							</Button>
 
-							<Button className="rounded-md">Editar</Button>
+							<Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+								<SheetTrigger asChild>
+									<Button className="flex-1">Editar</Button>
+								</SheetTrigger>
+
+								<SheetContent className="p-4 overflow-y-auto overflow-x-hidden">
+									<SheetHeader className="px-0">
+										<SheetTitle>Adicionar Filme</SheetTitle>
+									</SheetHeader>
+									<FormMovie
+										setIsSheetOpen={setIsSheetOpen}
+										movieToEdit={{
+											...data,
+											fileBanner: null,
+											fileCover: null,
+											genres: data.genres.map(g => ({
+												id: g.id,
+												name: g.name,
+											})),
+											bannerUrl: data.banner,
+											coverUrl: data.cover,
+											releaseDate: data.releaseDate
+												? new Date(data.releaseDate).toISOString().slice(0, 10)
+												: '',
+										}}
+									/>
+								</SheetContent>
+							</Sheet>
 						</div>
 					</div>
 
 					<div className="flex gap-4">
 						<Image
-							src={data.banner}
+							src={data.cover}
 							alt={data.title}
 							className="w-[374px] h-[542px] object-cover rounded-md"
 							width={374}
@@ -64,11 +102,13 @@ export const LayoutDesktop = ({
 									<span className="text-xs text-gray-400 uppercase">
 										Gêneros
 									</span>
-									{data.genres.map(genre => (
-										<Badge key={genre.id} className="text-lg rounded-md">
-											{genre.name}
-										</Badge>
-									))}
+									<div className="flex flex-wrap gap-2">
+										{data.genres.map(genre => (
+											<Badge key={genre.id} className="text-lg rounded-md">
+												{genre.name}
+											</Badge>
+										))}
+									</div>
 								</div>
 							</div>
 

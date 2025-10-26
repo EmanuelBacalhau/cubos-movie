@@ -19,7 +19,7 @@ export const CardMovie = ({ movie }: CardMovieProps) => {
 					<div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent pointer-events-none group-hover:from-black" />
 
 					<Image
-						src={movie.banner}
+						src={movie.cover}
 						alt={movie.title}
 						width={400}
 						height={225}

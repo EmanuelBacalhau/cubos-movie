@@ -1,11 +1,20 @@
 import Image from 'next/image';
+import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+	Sheet,
+	SheetContent,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger,
+} from '@/components/ui/sheet';
 import { Movie } from '@/services/types/movie';
 import { formatCurrencyToShort } from '@/utils/format-currency-to-short';
 import { formatHours } from '@/utils/format-hours';
 import { CircleVotes } from '../user-list/circle-votes';
 import { CardDetails } from './card-detail';
+import { FormMovie } from './form-movie';
 
 type LayoutMobileProps = {
 	data: Movie;
@@ -16,11 +25,13 @@ export const LayoutMobile = ({
 	data,
 	handleDeleteMovie,
 }: LayoutMobileProps) => {
+	const [isSheetOpen, setIsSheetOpen] = useState(false);
+
 	return (
 		<div className="w-full flex flex-col gap-2 lg:hidden">
 			<div className="flex flex-col gap-4 items-center w-full">
 				<Image
-					src={data.banner}
+					src={data.cover}
 					alt={data.title}
 					width={382}
 					height={582}
@@ -37,9 +48,31 @@ export const LayoutMobile = ({
 							Deletar
 						</Button>
 
-						<Button className="rounded-md flex-1">Editar</Button>
+						<Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+							<SheetTrigger asChild>
+								<Button className="rounded-md flex-1">Editar</Button>
+							</SheetTrigger>
+							<SheetContent className="p-4 overflow-y-auto overflow-x-hidden">
+								<SheetHeader className="px-0">
+									<SheetTitle>Editar Filme</SheetTitle>
+								</SheetHeader>
+								<FormMovie
+									setIsSheetOpen={setIsSheetOpen}
+									movieToEdit={{
+										...data,
+										fileBanner: null,
+										fileCover: null,
+										genres: data.genres.map(g => ({ id: g.id, name: g.name })),
+										bannerUrl: data.banner,
+										coverUrl: data.cover,
+										releaseDate: data.releaseDate
+											? new Date(data.releaseDate).toISOString().slice(0, 10)
+											: '',
+									}}
+								/>
+							</SheetContent>
+						</Sheet>
 					</div>
-
 					<div className="flex flex-col items-center">
 						<h1 className="text-2xl font-bold">{data.title}</h1>
 						<span className="text-sm text-muted-foreground">
@@ -60,11 +93,13 @@ export const LayoutMobile = ({
 
 			<div className="flex flex-col gap-1 bg-muted p-2 rounded-md w-full">
 				<span className="text-xs text-gray-400 uppercase">Gêneros</span>
-				{data.genres.map(genre => (
-					<Badge key={genre.id} className="text-lg rounded-md">
-						{genre.name}
-					</Badge>
-				))}
+				<div className="flex flex-wrap gap-2">
+					{data.genres.map(genre => (
+						<Badge key={genre.id} className="text-md rounded-md">
+							{genre.name}
+						</Badge>
+					))}
+				</div>
 			</div>
 
 			<div className="grid grid-cols-2 gap-2">

@@ -9,7 +9,7 @@ export const useMoviesController = () => {
 	const { data, isLoading, error } = useQuery({
 		queryKey: ['movies'],
 		queryFn: privateService.findMovies,
-		// refetchInterval: 2000,
+		refetchInterval: 2000,
 		retry: 1,
 	});
 

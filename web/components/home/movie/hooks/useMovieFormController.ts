@@ -1,13 +1,23 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { privateService } from '@/services/private-service';
-import { MovieForm } from '../form-movie';
+import { MovieEditForm, MovieForm } from '../form-movie';
 
-export function useMovieFormController(movieToEdit?: MovieForm) {
+export function useMovieFormController(movieToEdit?: MovieEditForm) {
+	const { data: genresList } = useQuery({
+		queryKey: ['genres-list'],
+		queryFn: () => privateService.findGenres(),
+	});
+
 	const form = useForm<MovieForm>({
 		defaultValues: movieToEdit
-			? { ...movieToEdit }
+			? {
+					...movieToEdit,
+					genres: movieToEdit.genres.map(genre => genre.id),
+					fileBanner: null,
+					fileCover: null,
+				}
 			: {
 					title: '',
 					description: '',
@@ -22,6 +32,8 @@ export function useMovieFormController(movieToEdit?: MovieForm) {
 					language: '',
 					revenue: 0,
 					profit: 0,
+					originalTitle: '',
+					rating: '',
 				},
 		mode: 'onSubmit',
 	});
@@ -33,8 +45,20 @@ export function useMovieFormController(movieToEdit?: MovieForm) {
 		movieToEdit?.coverUrl || null
 	);
 
-	const { mutateAsync, isPending, isSuccess } = useMutation({
+	const {
+		mutateAsync: mutateCreateAsync,
+		isPending: isCreatePending,
+		isSuccess: isCreateSuccess,
+	} = useMutation({
 		mutationFn: privateService.createMovie,
+	});
+
+	const {
+		mutateAsync: mutateUpdateAsync,
+		isPending: isUpdatePending,
+		isSuccess: isUpdateSuccess,
+	} = useMutation({
+		mutationFn: privateService.updateMovie,
 	});
 
 	const handleBannerChange = useCallback(
@@ -75,47 +99,65 @@ export function useMovieFormController(movieToEdit?: MovieForm) {
 
 	const onSubmit = useCallback(
 		async (data: MovieForm) => {
-			if (!data.fileBanner || !data.fileCover) {
+			const hasBanner = data.fileBanner || movieToEdit?.bannerUrl;
+			const hasCover = data.fileCover || movieToEdit?.coverUrl;
+			if (!hasBanner || !hasCover) {
 				alert('Por favor, selecione o banner e a capa do filme.');
 				return;
 			}
-			if (data.fileBanner.size === 0 || data.fileCover.size === 0) {
+			if (
+				(data.fileBanner &&
+					(!(data.fileBanner instanceof File) || data.fileBanner.size === 0)) ||
+				(data.fileCover &&
+					(!(data.fileCover instanceof File) || data.fileCover.size === 0))
+			) {
 				alert('Arquivo de banner ou capa inválido. Selecione novamente.');
 				return;
 			}
-			const { uploadBannerSignature, uploadCoverSignature } = await mutateAsync(
-				{
-					...data,
-					fileBanner: {
-						size: data.fileBanner.size,
-						inputType: data.fileBanner.name.split('.').pop() || '',
-					},
-					fileCover: {
-						size: data.fileCover.size,
-						inputType: data.fileCover.name.split('.').pop() || '',
-					},
-				}
-			);
-			const bannerFormData = new FormData();
-			Object.entries(uploadBannerSignature.fields).forEach(([key, value]) => {
-				bannerFormData.append(key, value as string);
-			});
-			bannerFormData.append('file', data.fileBanner);
-			await fetch(uploadBannerSignature.url, {
-				method: 'POST',
-				body: bannerFormData,
-			});
-			const coverFormData = new FormData();
-			Object.entries(uploadCoverSignature.fields).forEach(([key, value]) => {
-				coverFormData.append(key, value as string);
-			});
-			coverFormData.append('file', data.fileCover);
-			await fetch(uploadCoverSignature.url, {
-				method: 'POST',
-				body: coverFormData,
-			});
+
+			if (data.fileBanner instanceof File && data.fileCover instanceof File) {
+				const { uploadBannerSignature, uploadCoverSignature } =
+					await mutateCreateAsync({
+						...data,
+						fileBanner: {
+							size: data.fileBanner.size,
+							inputType: data.fileBanner.name.split('.').pop() || '',
+						},
+						fileCover: {
+							size: data.fileCover.size,
+							inputType: data.fileCover.name.split('.').pop() || '',
+						},
+					});
+				const bannerFormData = new FormData();
+				Object.entries(uploadBannerSignature.fields).forEach(([key, value]) => {
+					bannerFormData.append(key, value as string);
+				});
+				bannerFormData.append('file', data.fileBanner);
+				await fetch(uploadBannerSignature.url, {
+					method: 'POST',
+					body: bannerFormData,
+				});
+				const coverFormData = new FormData();
+				Object.entries(uploadCoverSignature.fields).forEach(([key, value]) => {
+					coverFormData.append(key, value as string);
+				});
+				coverFormData.append('file', data.fileCover);
+				await fetch(uploadCoverSignature.url, {
+					method: 'POST',
+					body: coverFormData,
+				});
+			} else {
+				const { fileBanner, fileCover, ...rest } = data;
+
+				await mutateUpdateAsync(rest);
+			}
 		},
-		[mutateAsync]
+		[
+			mutateCreateAsync,
+			movieToEdit?.bannerUrl,
+			movieToEdit?.coverUrl,
+			mutateUpdateAsync,
+		]
 	);
 
 	return {
@@ -127,7 +169,8 @@ export function useMovieFormController(movieToEdit?: MovieForm) {
 		removeBanner,
 		removeCover,
 		onSubmit,
-		isLoading: isPending,
-		isSuccess,
+		isLoading: isCreatePending,
+		isSuccess: isCreateSuccess,
+		genresList,
 	};
 }

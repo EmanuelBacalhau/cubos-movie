@@ -45,8 +45,6 @@ export class FindMoviesUseCase {
 			genres: movie.genres,
 		}));
 
-		console.log(response);
-
 		return {
 			items: response,
 			total,

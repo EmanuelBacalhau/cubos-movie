@@ -13,26 +13,6 @@ export const updateMovieSchema = z.object({
 	language: z.string().min(1, '"language" is required').optional(),
 	revenue: z.number().min(0, '"revenue" must be a positive number').optional(),
 	profit: z.number().min(0, '"profit" must be a positive number').optional(),
-	fileBanner: z.object({
-		size: z
-			.number()
-			.min(1, '"fileBanner.size" must be at least 1 byte')
-			.optional(),
-		inputType: z
-			.string()
-			.min(1, '"fileBanner.inputType" is required')
-			.optional(),
-	}),
-	fileCover: z.object({
-		size: z
-			.number()
-			.min(1, '"fileCover.size" must be at least 1 byte')
-			.optional(),
-		inputType: z
-			.string()
-			.min(1, '"fileCover.inputType" is required')
-			.optional(),
-	}),
 	originalTitle: z.string().min(1, '"originalTitle" is required').optional(),
 	rating: z.number().min(1, '"rating" is required').optional(),
 });

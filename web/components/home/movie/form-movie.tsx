@@ -2,6 +2,7 @@ import { Loader2Icon, UploadCloudIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
 	Form,
 	FormControl,
@@ -21,8 +22,8 @@ export type MovieForm = {
 	duration: number;
 	trailerUrl: string;
 	genres: string[];
-	fileBanner: File | null;
-	fileCover: File | null;
+	fileBanner: File | null | string;
+	fileCover: File | null | string;
 	votes: number;
 	language: string;
 	revenue: number;
@@ -30,13 +31,39 @@ export type MovieForm = {
 	id?: string;
 	bannerUrl?: string;
 	coverUrl?: string;
+	originalTitle: string;
+	rating: string;
+};
+
+export type MovieEditForm = {
+	title: string;
+	description: string;
+	releaseDate: string;
+	budget: number;
+	duration: number;
+	trailerUrl: string;
+	genres: {
+		id: string;
+		name: string;
+	}[];
+	fileBanner: File | null | string;
+	fileCover: File | null | string;
+	votes: number;
+	language: string;
+	revenue: number;
+	profit: number;
+	id?: string;
+	bannerUrl?: string;
+	coverUrl?: string;
+	originalTitle: string;
+	rating: string;
 };
 
 export const FormMovie = ({
 	movieToEdit,
 	setIsSheetOpen,
 }: {
-	movieToEdit?: MovieForm;
+	movieToEdit?: MovieEditForm;
 	setIsSheetOpen: (isOpen: boolean) => void;
 }) => {
 	const {
@@ -50,6 +77,7 @@ export const FormMovie = ({
 		onSubmit,
 		isLoading,
 		isSuccess,
+		genresList,
 	} = useMovieFormController(movieToEdit);
 
 	useEffect(() => {
@@ -63,7 +91,6 @@ export const FormMovie = ({
 			<form
 				onSubmit={form.handleSubmit(async data => {
 					await onSubmit(data);
-					setIsSheetOpen(false);
 				})}
 				className="space-y-4"
 			>
@@ -76,7 +103,16 @@ export const FormMovie = ({
 							<FormControl>
 								<div className="flex flex-col items-center gap-2">
 									<div className="relative w-full h-32 flex items-center justify-center border-2 border-dashed rounded-lg bg-muted/30">
-										{bannerPreview ? (
+										{movieToEdit?.id ? (
+											movieToEdit.bannerUrl && (
+												<Image
+													src={movieToEdit.bannerUrl}
+													alt="Banner Preview"
+													fill
+													className="object-cover rounded-lg w-full"
+												/>
+											)
+										) : bannerPreview ? (
 											<>
 												<Image
 													src={bannerPreview}
@@ -105,18 +141,20 @@ export const FormMovie = ({
 												Selecionar imagem
 											</Button>
 										)}
-										<Input
-											id="fileBannerInput"
-											type="file"
-											accept="image/*"
-											className="hidden"
-											onChange={e => {
-												const file = e.target.files?.[0] || null;
-												handleBannerChange(file, field.onChange);
-											}}
-										/>
+										{!movieToEdit?.id && (
+											<Input
+												id="fileBannerInput"
+												type="file"
+												accept="image/*"
+												className="hidden"
+												onChange={e => {
+													const file = e.target.files?.[0] || null;
+													handleBannerChange(file, field.onChange);
+												}}
+											/>
+										)}
 									</div>
-									{field.value?.name && (
+									{field.value instanceof File && !movieToEdit?.id && (
 										<span className="text-xs text-muted-foreground mt-1">
 											{field.value.name}
 										</span>
@@ -137,7 +175,16 @@ export const FormMovie = ({
 							<FormControl>
 								<div className="flex flex-col items-center gap-2">
 									<div className="relative w-full h-32 flex items-center justify-center border-2 border-dashed rounded-lg bg-muted/30">
-										{coverPreview ? (
+										{movieToEdit?.id ? (
+											movieToEdit.coverUrl && (
+												<Image
+													src={movieToEdit.coverUrl}
+													alt="Capa Preview"
+													fill
+													className="object-cover rounded-lg"
+												/>
+											)
+										) : coverPreview ? (
 											<>
 												<Image
 													src={coverPreview}
@@ -166,18 +213,20 @@ export const FormMovie = ({
 												Selecionar imagem
 											</Button>
 										)}
-										<Input
-											id="fileCoverInput"
-											type="file"
-											accept="image/*"
-											className="hidden"
-											onChange={e => {
-												const file = e.target.files?.[0] || null;
-												handleCoverChange(file, field.onChange);
-											}}
-										/>
+										{!movieToEdit?.id && (
+											<Input
+												id="fileCoverInput"
+												type="file"
+												accept="image/*"
+												className="hidden"
+												onChange={e => {
+													const file = e.target.files?.[0] || null;
+													handleCoverChange(file, field.onChange);
+												}}
+											/>
+										)}
 									</div>
-									{field.value?.name && (
+									{field.value instanceof File && !movieToEdit?.id && (
 										<span className="text-xs text-muted-foreground mt-1">
 											{field.value.name}
 										</span>
@@ -240,6 +289,85 @@ export const FormMovie = ({
 								<FormLabel>Idioma</FormLabel>
 								<FormControl>
 									<Input placeholder="Idioma" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
+
+				<FormField
+					control={form.control}
+					name="genres"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Gêneros</FormLabel>
+							<FormControl>
+								<div className="flex flex-wrap gap-2">
+									{genresList?.map(genre => (
+										<div key={genre.id} className="flex items-center gap-2">
+											<Checkbox
+												id={`genre-checkbox-${genre.id}`}
+												checked={field.value?.includes(genre.id)}
+												onCheckedChange={checked => {
+													if (checked) {
+														field.onChange([...(field.value || []), genre.id]);
+													} else {
+														field.onChange(
+															(field.value || []).filter(
+																(g: string) => g !== genre.id
+															)
+														);
+													}
+												}}
+											/>
+											<label
+												htmlFor={`genre-checkbox-${genre.id}`}
+												className="cursor-pointer"
+											>
+												{genre.name}
+											</label>
+										</div>
+									))}
+								</div>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<FormField
+						control={form.control}
+						name="originalTitle"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Título Original</FormLabel>
+								<FormControl>
+									<Input placeholder="Título Original" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="rating"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Classificação(anos)</FormLabel>
+								<FormControl>
+									<Input
+										type="number"
+										min={0}
+										step={1}
+										value={field.value ?? ''}
+										onChange={e => {
+											const value =
+												e.target.value === '' ? '' : Number(e.target.value);
+											field.onChange(value);
+										}}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>

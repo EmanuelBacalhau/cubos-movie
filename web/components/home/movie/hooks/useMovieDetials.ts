@@ -6,8 +6,6 @@ export function useMovieDetailsController() {
 		mutationFn: (id: string) => privateService.deleteMovie({ id }),
 	});
 
-	console.log(error);
-
 	return {
 		handleDeleteMovie: mutateAsync,
 		isDeleted: isSuccess,
