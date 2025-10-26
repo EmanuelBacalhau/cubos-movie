@@ -78,7 +78,7 @@ export class CreateMovieUseCase {
 						movie: {
 							title: movie.title,
 							description: movie.description,
-							pageUrl: 'localhost:3000/movies/' + movie.id,
+							pageUrl: `${process.env.FRONTEND_URL}/movies/${movie.id}`,
 							releaseDate: movie.releaseDate,
 							banner: movie.banner,
 							duration: movie.duration,
