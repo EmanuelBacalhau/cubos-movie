@@ -31,6 +31,9 @@ export class FindMoviesUseCase {
 				banner: await this.s3Gateway.generatePresignedUrl({
 					key: movie.banner,
 				}),
+				cover: await this.s3Gateway.generatePresignedUrl({
+					key: movie.cover,
+				}),
 			}))
 		);
 
