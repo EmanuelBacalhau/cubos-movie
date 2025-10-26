@@ -18,6 +18,8 @@ export class Movie {
 	createdAt: Date;
 	updatedAt: Date;
 	genres: string[];
+	originalTitle: string;
+	rating: string;
 
 	constructor(props: Movie.CreateAttributes, id?: string) {
 		this.id = id ?? '';
@@ -37,6 +39,8 @@ export class Movie {
 		this.revenue = props.revenue;
 		this.profit = props.profit;
 		this.genres = props.genres || [];
+		this.originalTitle = props.originalTitle;
+		this.rating = props.rating;
 	}
 }
 
@@ -58,6 +62,8 @@ export namespace Movie {
 		createdAt?: Date;
 		updatedAt?: Date;
 		genres?: string[];
+		originalTitle: string;
+		rating: string;
 	};
 
 	export type Attributes = {
@@ -78,6 +84,8 @@ export namespace Movie {
 		createdAt: Date;
 		updatedAt: Date;
 		genres: Genre[];
+		originalTitle: string;
+		rating: string;
 	};
 
 	export type CreateInput = {
@@ -95,6 +103,8 @@ export namespace Movie {
 		trailerUrl: string;
 		userId: string;
 		genres: string[];
+		originalTitle: string;
+		rating: string;
 	};
 
 	export type UpdateInput = {
@@ -111,5 +121,7 @@ export namespace Movie {
 		duration?: number;
 		trailerUrl?: string;
 		genres?: string[];
+		originalTitle?: string;
+		rating?: string;
 	};
 }

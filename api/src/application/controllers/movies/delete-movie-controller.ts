@@ -15,7 +15,10 @@ export class DeleteMovieController extends Controller<'private', unknown> {
 	): Promise<Controller.Response<DeleteMovieController.Response>> {
 		const params = deleteMovieSchema.parse(request.params);
 
-		await this.deleteMovieController.execute(params);
+		await this.deleteMovieController.execute({
+			id: params.id,
+			userId: request.accountId,
+		});
 
 		return {
 			statusCode: 204,

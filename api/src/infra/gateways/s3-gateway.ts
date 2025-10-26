@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { GetObjectCommand } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { s3Client } from '@infra/clients/s3Client';
@@ -59,6 +59,15 @@ export class S3Gateway {
 
 		return presigned;
 	}
+
+	async deleteFile({ key }: S3Gateway.DeleteFileParams): Promise<void> {
+		const command = new DeleteObjectCommand({
+			Bucket: this.bucket,
+			Key: key,
+		});
+
+		await s3Client.send(command);
+	}
 }
 
 export namespace S3Gateway {
@@ -79,6 +88,10 @@ export namespace S3Gateway {
 	};
 
 	export type PresignParams = {
+		key: string;
+	};
+
+	export type DeleteFileParams = {
 		key: string;
 	};
 }

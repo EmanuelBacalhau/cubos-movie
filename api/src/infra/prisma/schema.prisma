@@ -43,19 +43,21 @@ model GenreMovie {
 }
 
 model Movie {
-  id          String   @id @default(cuid())
-  title       String
-  description String
-  releaseDate DateTime
-  duration    Int
-  budget      Int
-  banner      String
-  trailerUrl  String
-  cover       String
-  votes       Int
-  language    String
-  revenue     Int
-  profit      Int
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  releaseDate   DateTime
+  duration      Int
+  budget        Int
+  banner        String
+  trailerUrl    String
+  cover         String
+  votes         Int
+  language      String
+  revenue       Int
+  profit        Int
+  originalTitle String
+  rating        String
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

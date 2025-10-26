@@ -169,6 +169,8 @@ export class PrismaMovieRepository implements IMovieRepository {
 					language: movie.language,
 					votes: movie.votes,
 					updatedAt: new Date(),
+					originalTitle: movie.originalTitle,
+					rating: movie.rating,
 				},
 			});
 		});

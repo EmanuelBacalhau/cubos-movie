@@ -20,6 +20,8 @@ export const createMovieSchema = z.object({
 		size: z.number().min(1, '"fileCover.size" must be at least 1 byte'),
 		inputType: z.string().min(1, '"fileCover.inputType" is required'),
 	}),
+	originalTitle: z.string().min(1, '"originalTitle" is required'),
+	rating: z.string().min(1, '"rating" is required'),
 });
 
 export type CreateMovieSchema = z.infer<typeof createMovieSchema>;

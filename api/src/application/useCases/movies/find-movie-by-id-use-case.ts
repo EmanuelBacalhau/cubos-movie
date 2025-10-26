@@ -24,6 +24,10 @@ export class FindMovieByIdUseCase {
 			key: movie.banner,
 		});
 
+		movie.cover = await this.s3Gateway.generatePresignedUrl({
+			key: movie.cover,
+		});
+
 		return movie;
 	}
 }
