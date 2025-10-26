@@ -37,8 +37,9 @@ export const NewMovieEmail = ({ userFirstName, movie }: NewMovieEmailProps) => {
 						<Section>
 							<Row>
 								<Img
-									className="w-full"
+									className="w-full object-cover"
 									width={620}
+									height={200}
 									src={movie.banner}
 									alt={movie.title}
 								/>

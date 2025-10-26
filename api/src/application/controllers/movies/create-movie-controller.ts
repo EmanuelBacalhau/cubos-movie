@@ -1,5 +1,4 @@
 import { Controller } from '@application/contracts/http/controller';
-import { Movie } from '@application/entities/movie';
 import { CreateMovieUseCase } from '@application/useCases/movies/create-movie-use-case';
 import { Injectable } from '@kernel/decorators/injectable';
 import { Schema } from '@kernel/decorators/schema';
@@ -31,5 +30,7 @@ export class CreateMovieController extends Controller<'private', unknown> {
 }
 
 export namespace HelloController {
-	export type Response = Movie;
+	export type Response = {
+		uploadSignature: string;
+	};
 }

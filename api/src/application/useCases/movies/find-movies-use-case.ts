@@ -1,12 +1,16 @@
 import { SearchMovieParams } from '@application/contracts/repositories/i-movie-repository';
 import { Movie } from '@application/entities/movie';
+import { S3Gateway } from '@infra/gateways/s3-gateway';
 import { PrismaMovieRepository } from '@infra/repositories/prisma/prisma-movie-repository';
 import { Injectable } from '@kernel/decorators/injectable';
 import { Pagination } from '@shared/types/pagination';
 
 @Injectable()
 export class FindMovieUseCase {
-	constructor(private readonly movieRepository: PrismaMovieRepository) {}
+	constructor(
+		private readonly movieRepository: PrismaMovieRepository,
+		private readonly s3Gateway: S3Gateway
+	) {}
 
 	async execute(
 		data: FindMovieUseCase.Request
@@ -21,8 +25,17 @@ export class FindMovieUseCase {
 		const total = await this.movieRepository.count(data);
 		const totalPages = Math.ceil(total / data.perPage);
 
+		const moviesWithBannerUrl = await Promise.all(
+			movies.map(async movie => ({
+				...movie,
+				banner: await this.s3Gateway.generatePresignedUrl({
+					key: movie.banner,
+				}),
+			}))
+		);
+
 		return {
-			items: movies,
+			items: moviesWithBannerUrl,
 			total,
 			page: data.page,
 			perPage: data.perPage,
