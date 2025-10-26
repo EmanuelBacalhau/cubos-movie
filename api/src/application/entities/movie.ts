@@ -12,6 +12,8 @@ export class Movie {
 	createdAt: Date;
 	updatedAt: Date;
 
+	genreStr: string;
+
 	constructor(props: Movie.CreateAttributes, id?: string) {
 		this.id = id ?? '';
 		this.title = props.title;
@@ -25,6 +27,7 @@ export class Movie {
 		this.genreId = props.genreId;
 		this.createdAt = props.createdAt || new Date();
 		this.updatedAt = props.updatedAt || new Date();
+		this.genreStr = props.genre || '';
 	}
 }
 
@@ -41,6 +44,7 @@ export namespace Movie {
 		genreId: string;
 		createdAt?: Date;
 		updatedAt?: Date;
+		genre?: string;
 	};
 
 	export type Attributes = {

@@ -1,11 +1,19 @@
 import { Movie } from '@application/entities/movie';
 import { Conflict } from '@application/errors/application/conflict';
+import NewMovieEmail from '@infra/emails/templates/NewMovie';
+import { SESGateway } from '@infra/gateways/ses-gateway';
 import { PrismaMovieRepository } from '@infra/repositories/prisma/prisma-movie-repository';
+import { PrismaUserRepository } from '@infra/repositories/prisma/prisma-user-repository';
 import { Injectable } from '@kernel/decorators/injectable';
+import { render } from '@react-email/components';
 
 @Injectable()
 export class CreateMovieUseCase {
-	constructor(private readonly movieRepository: PrismaMovieRepository) {}
+	constructor(
+		private readonly movieRepository: PrismaMovieRepository,
+		private readonly userRepository: PrismaUserRepository,
+		private readonly sesGateway: SESGateway
+	) {}
 
 	async execute(data: Movie.CreateInput): Promise<CreateMovieUseCase.Response> {
 		const existingMovie = await this.movieRepository.findByTitle(data.title);
@@ -18,6 +26,33 @@ export class CreateMovieUseCase {
 
 		const movie = await this.movieRepository.create(data);
 
+		if (movie.releaseDate > new Date()) {
+			const users = await this.userRepository.find();
+
+			users.forEach(async user => {
+				const [userFirstName] = user.name.split(' ');
+
+				await this.sesGateway.sendEmail({
+					from: process.env.EMAIL as string,
+					to: [user.email],
+					subject: `Novo filme adicionado: ${movie.title}`,
+					template: await render(
+						NewMovieEmail({
+							userFirstName,
+							movie: {
+								title: movie.title,
+								description: movie.description,
+								pageUrl: 'localhost:3000/movies/' + movie.id,
+								releaseDate: movie.releaseDate,
+								banner: movie.banner,
+								duration: movie.duration,
+								genre: movie.genreStr,
+							},
+						})
+					),
+				});
+			});
+		}
 		return movie;
 	}
 }

@@ -12,12 +12,15 @@ import { FindMovieUseCase } from '@application/useCases/movies/find-movies-use-c
 import { UpdateMovieUseCase } from '@application/useCases/movies/update-movie-use-case';
 import { CreateUserUseCase } from '@application/useCases/users/create-user-use-case';
 import { SignInUseCase } from '@application/useCases/users/sign-in-use-case';
+import { SESGateway } from '@infra/gateways/ses-gateway';
 import { PrismaGenreRepository } from '@infra/repositories/prisma/prisma-genre-repository';
 import { PrismaMovieRepository } from '@infra/repositories/prisma/prisma-movie-repository';
 import { PrismaUserRepository } from '@infra/repositories/prisma/prisma-user-repository';
 import { Registry } from './registry';
 
 export const container = Registry.getInstance();
+
+container.register(SESGateway, SESGateway);
 
 container.register(PrismaUserRepository, PrismaUserRepository);
 container.register(PrismaMovieRepository, PrismaMovieRepository);

@@ -20,4 +20,16 @@ export class PrismaUserRepository implements IUserRepository {
 
 		return user ? new User({ ...user }, user.id) : null;
 	}
+
+	async find(): Promise<Pick<User, 'id' | 'email' | 'name'>[]> {
+		const users = await prismaClient.user.findMany({
+			select: {
+				id: true,
+				email: true,
+				name: true,
+			},
+		});
+
+		return users;
+	}
 }

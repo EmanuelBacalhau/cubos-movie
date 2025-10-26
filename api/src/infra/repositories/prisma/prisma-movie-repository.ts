@@ -11,9 +11,12 @@ export class PrismaMovieRepository implements IMovieRepository {
 	async create(data: Movie.CreateInput): Promise<Movie> {
 		const movie = await prismaClient.movie.create({
 			data,
+			include: {
+				genre: true,
+			},
 		});
 
-		return new Movie({ ...movie }, movie.id);
+		return new Movie({ ...movie, genre: movie.genre.name }, movie.id);
 	}
 
 	async count(props: SearchMovieParams): Promise<number> {
