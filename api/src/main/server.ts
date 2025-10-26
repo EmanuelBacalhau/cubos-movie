@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import 'reflect-metadata';
 
+import cors from '@fastify/cors';
 import fastifyJwt from '@fastify/jwt';
 import { fastify } from 'fastify';
 import { registerGenreRoutes } from './routes/genres';
@@ -8,6 +9,8 @@ import { registerMovieRoutes } from './routes/movies';
 import { registerUserRoutes } from './routes/users';
 
 export const fastifyServer = fastify();
+
+fastifyServer.register(cors);
 
 fastifyServer.register(fastifyJwt, {
 	secret: process.env.JWT_SECRET as string,

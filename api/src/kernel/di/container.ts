@@ -5,6 +5,7 @@ import { FindMovieByIdController } from '@application/controllers/movies/find-mo
 import { FindMoviesController } from '@application/controllers/movies/find-movies-controller';
 import { UpdateMovieController } from '@application/controllers/movies/update-movie-controller';
 import { CreateUserController } from '@application/controllers/users/create-user-controller';
+import { GetMeController } from '@application/controllers/users/get-me-controller';
 import { SignInController } from '@application/controllers/users/sign-in-controller';
 import { FindGenresUseCase } from '@application/useCases/genres/find-genres-use-case';
 import { CreateMovieUseCase } from '@application/useCases/movies/create-movie-use-case';
@@ -13,6 +14,7 @@ import { FindMovieByIdUseCase } from '@application/useCases/movies/find-movie-by
 import { FindMoviesUseCase } from '@application/useCases/movies/find-movies-use-case';
 import { UpdateMovieUseCase } from '@application/useCases/movies/update-movie-use-case';
 import { CreateUserUseCase } from '@application/useCases/users/create-user-use-case';
+import { GetMeUsecase } from '@application/useCases/users/get-me-use-case';
 import { SignInUseCase } from '@application/useCases/users/sign-in-use-case';
 import { S3Gateway } from '@infra/gateways/s3-gateway';
 import { SESGateway } from '@infra/gateways/ses-gateway';
@@ -38,6 +40,7 @@ container.register(FindMoviesUseCase, FindMoviesUseCase);
 container.register(DeleteMovieUseCase, DeleteMovieUseCase);
 container.register(FindGenresUseCase, FindGenresUseCase);
 container.register(FindMovieByIdUseCase, FindMovieByIdUseCase);
+container.register(GetMeUsecase, GetMeUsecase);
 
 container.register(CreateUserController, CreateUserController);
 container.register(SignInController, SignInController);
@@ -47,3 +50,4 @@ container.register(FindMoviesController, FindMoviesController);
 container.register(DeleteMovieController, DeleteMovieController);
 container.register(FindGenresController, FindGenresController);
 container.register(FindMovieByIdController, FindMovieByIdController);
+container.register(GetMeController, GetMeController);

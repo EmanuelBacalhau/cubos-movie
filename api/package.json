@@ -21,6 +21,7 @@
     "@aws-sdk/client-sqs": "^3.879.0",
     "@aws-sdk/s3-presigned-post": "^3.917.0",
     "@aws-sdk/s3-request-presigner": "^3.917.0",
+    "@fastify/cors": "^11.1.0",
     "@fastify/jwt": "^10.0.0",
     "@prisma/client": "^6.18.0",
     "@react-email/components": "0.5.7",
