@@ -1,6 +1,8 @@
 export type Movie = {
 	id: string;
 	title: string;
+	originalTitle: string;
+	rating: string;
 	description: string;
 	releaseDate: string;
 	duration: number;

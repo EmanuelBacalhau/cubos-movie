@@ -1,43 +1,55 @@
 type CircleVotesProps = {
 	votes: number;
+	size?: number;
 };
 
-export const CircleVotes = ({ votes }: CircleVotesProps) => {
+export const CircleVotes = ({ votes, size = 128 }: CircleVotesProps) => {
+	const radius = size / 2 - 5;
+	const center = size / 2;
+	const circumference = 2 * Math.PI * radius;
+
 	return (
 		<div className="flex items-center justify-center">
-			<div className="relative w-32 h-32 flex items-center justify-center">
-				<svg className="w-full h-full" viewBox="0 0 64 64">
+			<div
+				className="relative flex items-center justify-center bg-black rounded-full"
+				style={{ width: size, height: size }}
+			>
+				<svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
 					<title>{votes ? `${votes} votos` : 'Sem votos'}</title>
 					<circle
 						className="text-gray-700"
 						stroke="currentColor"
 						strokeWidth="6"
 						fill="transparent"
-						r="27"
-						cx="32"
-						cy="32"
+						r={radius}
+						cx={center}
+						cy={center}
 					/>
 					<circle
 						className="text-yellow-400"
 						stroke="currentColor"
 						strokeWidth="6"
 						fill="transparent"
-						r="27"
-						cx="32"
-						cy="32"
-						strokeDasharray={2 * Math.PI * 27}
+						r={radius}
+						cx={center}
+						cy={center}
+						strokeDasharray={circumference}
 						strokeDashoffset={
-							2 * Math.PI * 27 * (1 - (votes ? Math.min(votes, 10) / 10 : 0))
+							circumference * (1 - (votes ? Math.min(votes, 10) / 10 : 0))
 						}
 						strokeLinecap="round"
 						style={{ transition: 'stroke-dashoffset 0.5s' }}
 					/>
 				</svg>
-				<div className="absolute text-white text-xl font-bold select-none flex flex-col items-center justify-center">
+
+				<div
+					className="absolute text-white font-bold select-none flex flex-col items-center justify-center "
+					style={{ fontSize: size * 0.18 }}
+				>
 					{votes ? (
 						<>
 							<span>{votes}</span>
-							<span>votos</span>
+							<span style={{ fontSize: size * 0.12 }}>votos</span>
 						</>
 					) : (
 						'--'
