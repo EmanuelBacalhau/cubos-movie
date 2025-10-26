@@ -19,7 +19,7 @@ export class Movie {
 	updatedAt: Date;
 	genres: string[];
 	originalTitle: string;
-	rating: string;
+	rating: number;
 
 	constructor(props: Movie.CreateAttributes, id?: string) {
 		this.id = id ?? '';
@@ -63,7 +63,7 @@ export namespace Movie {
 		updatedAt?: Date;
 		genres?: string[];
 		originalTitle: string;
-		rating: string;
+		rating: number;
 	};
 
 	export type Attributes = {
@@ -85,7 +85,7 @@ export namespace Movie {
 		updatedAt: Date;
 		genres: Genre[];
 		originalTitle: string;
-		rating: string;
+		rating: number;
 	};
 
 	export type CreateInput = {
@@ -104,7 +104,7 @@ export namespace Movie {
 		userId: string;
 		genres: string[];
 		originalTitle: string;
-		rating: string;
+		rating: number;
 	};
 
 	export type UpdateInput = {
@@ -122,6 +122,6 @@ export namespace Movie {
 		trailerUrl?: string;
 		genres?: string[];
 		originalTitle?: string;
-		rating?: string;
+		rating?: number;
 	};
 }

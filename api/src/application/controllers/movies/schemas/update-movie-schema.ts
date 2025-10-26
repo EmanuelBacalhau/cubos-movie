@@ -34,7 +34,7 @@ export const updateMovieSchema = z.object({
 			.optional(),
 	}),
 	originalTitle: z.string().min(1, '"originalTitle" is required').optional(),
-	rating: z.string().min(1, '"rating" is required').optional(),
+	rating: z.number().min(1, '"rating" is required').optional(),
 });
 
 export type UpdateMovieSchema = z.infer<typeof updateMovieSchema>;

@@ -40,21 +40,29 @@ export class PrismaMovieRepository implements IMovieRepository {
 	}
 
 	async count(props: SearchMovieParams): Promise<number> {
+		const where: any = {};
+
+		if (props.title) {
+			where.title = {
+				contains: props.title,
+				mode: 'insensitive',
+			};
+		}
+		if (props.genreId) {
+			where.genres = { some: { genreId: props.genreId } };
+		}
+		if (props.duration) {
+			where.duration = props.duration;
+		}
+		if (props.realeseStartDate || props.realeseEndDate) {
+			where.releaseDate = {};
+			if (props.realeseStartDate)
+				where.releaseDate.gte = props.realeseStartDate;
+			if (props.realeseEndDate) where.releaseDate.lte = props.realeseEndDate;
+		}
+
 		const total = await prismaClient.movie.count({
-			where: {
-				title: {
-					contains: props.title,
-					mode: 'insensitive',
-				},
-				genres: {
-					some: { genreId: props.genreId },
-				},
-				duration: props.duration,
-				releaseDate: {
-					gte: props.realeseStartDate,
-					lte: props.realeseEndDate,
-				},
-			},
+			where,
 		});
 		return total;
 	}
@@ -97,23 +105,31 @@ export class PrismaMovieRepository implements IMovieRepository {
 		const page = props.page || 1;
 		const perPage = props.perPage || 10;
 
+		const where: any = {};
+
+		if (props.title) {
+			where.title = {
+				contains: props.title,
+				mode: 'insensitive',
+			};
+		}
+		if (props.genreId) {
+			where.genres = { some: { genreId: props.genreId } };
+		}
+		if (props.duration) {
+			where.duration = props.duration;
+		}
+		if (props.realeseStartDate || props.realeseEndDate) {
+			where.releaseDate = {};
+			if (props.realeseStartDate)
+				where.releaseDate.gte = props.realeseStartDate;
+			if (props.realeseEndDate) where.releaseDate.lte = props.realeseEndDate;
+		}
+
 		const movies = await prismaClient.movie.findMany({
 			skip: (page - 1) * perPage,
-			take: 10,
-			where: {
-				title: {
-					contains: props.title,
-					mode: 'insensitive',
-				},
-				genres: {
-					some: { genreId: props.genreId },
-				},
-				duration: props.duration,
-				releaseDate: {
-					gte: props.realeseStartDate,
-					lte: props.realeseEndDate,
-				},
-			},
+			take: perPage,
+			where,
 			include: {
 				genres: {
 					include: {

@@ -13,8 +13,8 @@ export class FindMoviesUseCase {
 	) {}
 
 	async execute(
-		data: FindMovieUseCase.Request
-	): Promise<FindMovieUseCase.Response> {
+		data: FindMoviesUseCase.Request
+	): Promise<FindMoviesUseCase.Response> {
 		data.page = data.page || 1;
 		data.perPage = data.perPage || 10;
 
@@ -37,8 +37,18 @@ export class FindMoviesUseCase {
 			}))
 		);
 
+		const response = moviesWithBannerUrl.map(movie => ({
+			id: movie.id,
+			banner: movie.banner,
+			votes: movie.votes,
+			title: movie.title,
+			genres: movie.genres,
+		}));
+
+		console.log(response);
+
 		return {
-			items: moviesWithBannerUrl,
+			items: response,
 			total,
 			page: data.page,
 			perPage: data.perPage,
@@ -47,7 +57,9 @@ export class FindMoviesUseCase {
 	}
 }
 
-export namespace FindMovieUseCase {
+export namespace FindMoviesUseCase {
 	export interface Request extends SearchMovieParams {}
-	export type Response = Pagination<Movie.Attributes>;
+	export type Response = Pagination<
+		Pick<Movie.Attributes, 'id' | 'banner' | 'votes' | 'title' | 'genres'>
+	>;
 }

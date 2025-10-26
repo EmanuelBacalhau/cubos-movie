@@ -31,10 +31,7 @@ export const CardMovie = ({ movie }: CardMovieProps) => {
 					</div>
 
 					<div className="z-1 text-white flex flex-col gap-0.5 min-h-10 p-4">
-						<strong
-							className="truncate block max-w-full text-md leading-tight"
-							title={movie.title}
-						>
+						<strong className="truncate block max-w-full text-md leading-tight">
 							{movie.title}
 						</strong>
 

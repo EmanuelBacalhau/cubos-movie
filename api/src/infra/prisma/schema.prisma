@@ -57,7 +57,7 @@ model Movie {
   revenue       Int
   profit        Int
   originalTitle String
-  rating        String
+  rating        Int
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
