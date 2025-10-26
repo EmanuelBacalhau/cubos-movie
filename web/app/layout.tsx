@@ -25,7 +25,9 @@ export default function RootLayout({
 			>
 				<ApplicationProvier>
 					<Header />
-					{children}
+					<main className="container mx-auto flex flex-col flex-1">
+						{children}
+					</main>
 				</ApplicationProvier>
 			</body>
 		</html>

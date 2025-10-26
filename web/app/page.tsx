@@ -1,7 +1,9 @@
+import { UserList } from '@/components/home/user-list';
+
 const Home = () => {
 	return (
-		<div>
-			<h1>Teste</h1>
+		<div className="p-4 flex flex-col flex-1">
+			<UserList />
 		</div>
 	);
 };

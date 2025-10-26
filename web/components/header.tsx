@@ -12,15 +12,17 @@ export const Header = () => {
 
 	return (
 		<header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-sm flex justify-between items-center h-14 px-6">
-			<Image src={logo} alt="Logo Cubos Movies" />
-			<div className="flex gap-4 items-center">
-				<ThemeSwitcher />
+			<div className="flex items-center justify-between w-full container mx-auto">
+				<Image src={logo} alt="Logo Cubos Movies" width={200} />
+				<div className="flex gap-4 items-center">
+					<ThemeSwitcher />
 
-				{signedIn && (
-					<Button className="gap-2" onClick={signOut}>
-						Sair <LogOutIcon className="size-4" />
-					</Button>
-				)}
+					{signedIn && (
+						<Button className="gap-2" onClick={signOut}>
+							Sair <LogOutIcon className="size-4" />
+						</Button>
+					)}
+				</div>
 			</div>
 		</header>
 	);
