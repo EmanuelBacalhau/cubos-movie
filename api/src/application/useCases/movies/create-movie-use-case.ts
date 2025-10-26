@@ -28,35 +28,51 @@ export class CreateMovieUseCase {
 
 		data.duration = data.duration * 60;
 
-		const { file, ...movieData } = data;
+		const { fileBanner, fileCover, ...movieData } = data;
 
-		const fileKey = S3Gateway.generateInputFileKey({
-			inputType: file.inputType,
+		const fileBannerKey = S3Gateway.generateInputFileKey({
+			inputType: fileBanner.inputType,
+		});
+
+		const fileCoverKey = S3Gateway.generateInputFileKey({
+			inputType: fileCover.inputType,
 		});
 
 		const movie = await this.movieRepository.create({
 			...movieData,
-			banner: fileKey,
+			banner: fileBannerKey,
+			cover: fileCoverKey,
 		});
 
 		if (movie.releaseDate > new Date()) {
 			await this.sendNewMovieEmail(movie);
 		}
 
-		const { uploadSignature } = await this.s3Gateway.createPOST({
-			file: {
-				key: fileKey,
-				size: data.file.size,
-				inputType: data.file.inputType,
-			},
-		});
+		const { uploadSignature: uploadBannerSignature } =
+			await this.s3Gateway.createPOST({
+				file: {
+					key: fileBannerKey,
+					size: data.fileBanner.size,
+					inputType: data.fileBanner.inputType,
+				},
+			});
+
+		const { uploadSignature: uploadCoverSignature } =
+			await this.s3Gateway.createPOST({
+				file: {
+					key: fileCoverKey,
+					size: data.fileCover.size,
+					inputType: data.fileCover.inputType,
+				},
+			});
 
 		return {
-			uploadSignature,
+			uploadBannerSignature,
+			uploadCoverSignature,
 		};
 	}
 
-	private async sendNewMovieEmail(movie: Movie) {
+	private async sendNewMovieEmail(movie: Movie.Attributes) {
 		const users = await this.userRepository.find();
 
 		const url = await this.s3Gateway.generatePresignedUrl({
@@ -82,7 +98,7 @@ export class CreateMovieUseCase {
 							releaseDate: movie.releaseDate,
 							banner: movie.banner,
 							duration: movie.duration,
-							genre: movie.genreStr,
+							genre: movie.genres.map(genre => genre.name).join(', '),
 						},
 					})
 				),
@@ -92,14 +108,19 @@ export class CreateMovieUseCase {
 }
 
 export namespace CreateMovieUseCase {
-	export type Request = Omit<Movie.CreateInput, 'banner'> & {
-		file: {
+	export type Request = Omit<Movie.CreateInput, 'banner' | 'cover'> & {
+		fileBanner: {
+			size: number;
+			inputType: string;
+		};
+		fileCover: {
 			size: number;
 			inputType: string;
 		};
 	};
 
 	export type Response = {
-		uploadSignature: string;
+		uploadBannerSignature: string;
+		uploadCoverSignature: string;
 	};
 }

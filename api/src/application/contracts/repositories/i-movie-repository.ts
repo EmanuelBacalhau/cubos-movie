@@ -11,10 +11,10 @@ export interface SearchMovieParams {
 }
 
 export interface IMovieRepository {
-	create(data: Movie.CreateInput): Promise<Movie>;
-	findById(id: string): Promise<Movie | null>;
+	create(data: Movie.CreateInput): Promise<Movie.Attributes>;
+	findById(id: string): Promise<Movie.Attributes | null>;
 	findByTitle(title: string): Promise<Movie | null>;
-	find(props: SearchMovieParams): Promise<Movie[]>;
+	find(props: SearchMovieParams): Promise<Movie.Attributes[]>;
 	update(movie: Movie.UpdateInput): Promise<void>;
 	delete(id: string): Promise<void>;
 	count(props: SearchMovieParams): Promise<number>;

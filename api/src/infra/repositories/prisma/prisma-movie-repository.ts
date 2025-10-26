@@ -8,15 +8,35 @@ import { Injectable } from '@kernel/decorators/injectable';
 
 @Injectable()
 export class PrismaMovieRepository implements IMovieRepository {
-	async create(data: Movie.CreateInput): Promise<Movie> {
+	async create(data: Movie.CreateInput): Promise<Movie.Attributes> {
+		const { genres, ...movieData } = data;
+
 		const movie = await prismaClient.movie.create({
-			data,
+			data: {
+				...movieData,
+				genres: {
+					create: genres.map((genreId: string) => ({
+						genre: { connect: { id: genreId } },
+					})),
+				},
+			},
 			include: {
-				genre: true,
+				genres: {
+					include: {
+						genre: true,
+					},
+				},
 			},
 		});
 
-		return new Movie({ ...movie, genre: movie.genre.name }, movie.id);
+		return {
+			...movie,
+			genres:
+				movie.genres?.map(g => ({
+					id: g.genre.id,
+					name: g.genre.name,
+				})) ?? [],
+		};
 	}
 
 	async count(props: SearchMovieParams): Promise<number> {
@@ -26,7 +46,9 @@ export class PrismaMovieRepository implements IMovieRepository {
 					contains: props.title,
 					mode: 'insensitive',
 				},
-				genreId: props.genreId,
+				genres: {
+					some: { genreId: props.genreId },
+				},
 				duration: props.duration,
 				releaseDate: {
 					gte: props.realeseStartDate,
@@ -37,12 +59,30 @@ export class PrismaMovieRepository implements IMovieRepository {
 		return total;
 	}
 
-	async findById(id: string): Promise<Movie | null> {
+	async findById(id: string): Promise<Movie.Attributes | null> {
 		const movie = await prismaClient.movie.findUnique({
 			where: { id },
+			include: {
+				genres: {
+					include: {
+						genre: true,
+					},
+				},
+			},
 		});
 
-		return movie ? new Movie({ ...movie }, movie.id) : null;
+		if (!movie) {
+			return null;
+		}
+
+		return {
+			...movie,
+			genres:
+				movie.genres?.map(g => ({
+					id: g.genre.id,
+					name: g.genre.name,
+				})) ?? [],
+		};
 	}
 
 	async findByTitle(title: string): Promise<Movie | null> {
@@ -53,7 +93,7 @@ export class PrismaMovieRepository implements IMovieRepository {
 		return movie ? new Movie({ ...movie }, movie.id) : null;
 	}
 
-	async find(props: SearchMovieParams): Promise<Movie[]> {
+	async find(props: SearchMovieParams): Promise<Movie.Attributes[]> {
 		const page = props.page || 1;
 		const perPage = props.perPage || 10;
 
@@ -65,34 +105,72 @@ export class PrismaMovieRepository implements IMovieRepository {
 					contains: props.title,
 					mode: 'insensitive',
 				},
-				genreId: props.genreId,
+				genres: {
+					some: { genreId: props.genreId },
+				},
 				duration: props.duration,
 				releaseDate: {
 					gte: props.realeseStartDate,
 					lte: props.realeseEndDate,
 				},
 			},
+			include: {
+				genres: {
+					include: {
+						genre: true,
+					},
+				},
+			},
 		});
 
-		return movies.map(movie => new Movie({ ...movie }, movie.id));
+		return movies.map(movie => ({
+			...movie,
+			genres:
+				movie.genres?.map(g => ({
+					id: g.genre.id,
+					name: g.genre.name,
+				})) ?? [],
+		}));
 	}
 
 	async update({
 		id,
 		...movie
 	}: PrismaMovieRepository.UpdateParams): Promise<void> {
-		await prismaClient.movie.update({
-			where: { id },
-			data: {
-				title: movie.title,
-				description: movie.description,
-				releaseDate: movie.releaseDate,
-				budget: movie.budget,
-				banner: movie.banner,
-				trailerUrl: movie.trailerUrl,
-				genreId: movie.genreId,
-				updatedAt: new Date(),
-			},
+		await prismaClient.$transaction(async tx => {
+			await tx.genreMovie.deleteMany({
+				where: { movieId: id },
+			});
+
+			const newGenres = (movie.genres ?? []).map((genreId: string) => ({
+				movieId: id,
+				genreId: genreId,
+			}));
+
+			if (newGenres.length > 0) {
+				await tx.genreMovie.createMany({
+					data: newGenres,
+				});
+			}
+
+			await tx.movie.update({
+				where: { id },
+				data: {
+					title: movie.title,
+					description: movie.description,
+					releaseDate: movie.releaseDate,
+					budget: movie.budget,
+					duration: movie.duration,
+					banner: movie.banner,
+					cover: movie.cover,
+					profit: movie.profit,
+					trailerUrl: movie.trailerUrl,
+					revenue: movie.revenue,
+					language: movie.language,
+					votes: movie.votes,
+					updatedAt: new Date(),
+				},
+			});
 		});
 	}
 

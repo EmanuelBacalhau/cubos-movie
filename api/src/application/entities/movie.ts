@@ -1,3 +1,5 @@
+import { Genre } from './genre';
+
 export class Movie {
 	id: string;
 	title: string;
@@ -5,14 +7,17 @@ export class Movie {
 	releaseDate: Date;
 	budget: number;
 	duration: number;
+	cover: string;
+	votes: number;
+	language: string;
+	revenue: number;
+	profit: number;
 	banner: string;
 	trailerUrl: string;
 	userId: string;
-	genreId: string;
 	createdAt: Date;
 	updatedAt: Date;
-
-	genreStr: string;
+	genres: string[];
 
 	constructor(props: Movie.CreateAttributes, id?: string) {
 		this.id = id ?? '';
@@ -24,10 +29,14 @@ export class Movie {
 		this.banner = props.banner;
 		this.trailerUrl = props.trailerUrl;
 		this.userId = props.userId;
-		this.genreId = props.genreId;
 		this.createdAt = props.createdAt || new Date();
 		this.updatedAt = props.updatedAt || new Date();
-		this.genreStr = props.genre || '';
+		this.cover = props.cover;
+		this.votes = props.votes;
+		this.language = props.language;
+		this.revenue = props.revenue;
+		this.profit = props.profit;
+		this.genres = props.genres || [];
 	}
 }
 
@@ -38,13 +47,17 @@ export namespace Movie {
 		releaseDate: Date;
 		budget: number;
 		banner: string;
+		cover: string;
+		votes: number;
+		language: string;
+		revenue: number;
+		profit: number;
 		trailerUrl: string;
 		duration: number;
 		userId: string;
-		genreId: string;
 		createdAt?: Date;
 		updatedAt?: Date;
-		genre?: string;
+		genres?: string[];
 	};
 
 	export type Attributes = {
@@ -56,14 +69,24 @@ export namespace Movie {
 		banner: string;
 		duration: number;
 		trailerUrl: string;
+		cover: string;
+		votes: number;
+		language: string;
+		revenue: number;
+		profit: number;
 		userId: string;
-		genreId: string;
 		createdAt: Date;
 		updatedAt: Date;
+		genres: Genre[];
 	};
 
 	export type CreateInput = {
 		title: string;
+		cover: string;
+		votes: number;
+		language: string;
+		revenue: number;
+		profit: number;
 		description: string;
 		releaseDate: Date;
 		budget: number;
@@ -71,17 +94,22 @@ export namespace Movie {
 		duration: number;
 		trailerUrl: string;
 		userId: string;
-		genreId: string;
+		genres: string[];
 	};
 
 	export type UpdateInput = {
 		title?: string;
+		cover?: string;
+		votes?: number;
+		language?: string;
+		revenue?: number;
+		profit?: number;
 		description?: string;
 		releaseDate?: Date;
 		budget?: number;
 		banner?: string;
 		duration?: number;
 		trailerUrl?: string;
-		genreId?: string;
+		genres?: string[];
 	};
 }

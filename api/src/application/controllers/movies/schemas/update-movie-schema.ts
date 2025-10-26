@@ -8,7 +8,7 @@ export const updateMovieSchema = z.object({
 	budget: z.number().min(0, '"budget" must be a positive number').optional(),
 	banner: z.url('"banner" must be a valid URL').optional(),
 	trailerUrl: z.string('"trailerUrl" is required').optional(),
-	genreId: z.cuid('"genreId" is required').optional(),
+	genres: z.array(z.cuid()).optional(),
 });
 
 export type UpdateMovieSchema = z.infer<typeof updateMovieSchema>;

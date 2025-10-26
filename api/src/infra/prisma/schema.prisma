@@ -26,9 +26,20 @@ model Genre {
   id   String @id @default(cuid())
   name String @unique
 
-  movies Movie[]
+  movies GenreMovie[]
 
   @@map("genres")
+}
+
+model GenreMovie {
+  genreId String
+  movieId String
+
+  genre Genre @relation(fields: [genreId], references: [id])
+  movie Movie @relation(fields: [movieId], references: [id])
+
+  @@id([genreId, movieId])
+  @@map("genre_movies")
 }
 
 model Movie {
@@ -40,37 +51,18 @@ model Movie {
   budget      Int
   banner      String
   trailerUrl  String
+  cover       String
+  votes       Int
+  language    String
+  revenue     Int
+  profit      Int
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
-  genreId String
-  genre   Genre  @relation(fields: [genreId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  emailReminders EmailReminder[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  genres    GenreMovie[]
 
   @@map("movies")
-}
-
-enum EmailReminderStatus {
-  PENDING
-  SENT
-  FAILED
-}
-
-model EmailReminder {
-  id      String              @id @default(cuid())
-  sendAt  DateTime
-  attemps Int                 @default(0)
-  status  EmailReminderStatus @default(PENDING)
-
-  movieId String
-  movie   Movie  @relation(fields: [movieId], references: [id])
-
-  createdAt DateTime @default(now())
-
-  @@map("email_reminders")
 }

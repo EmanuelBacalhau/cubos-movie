@@ -77,7 +77,8 @@ export const NewMovieEmail = ({ userFirstName, movie }: NewMovieEmailProps) => {
 
 									<Text>
 										<b>Duration: </b>
-										{Math.ceil(movie.duration / 60)}h {movie.duration % 60}m
+										{Math.ceil(movie.duration / 60)}h{' '}
+										{movie.duration % 60 > 0 ? `${movie.duration % 60}m` : ''}
 									</Text>
 
 									<Text className="text-center">
