@@ -9,17 +9,31 @@ import { CardDetails } from './card-detail';
 
 type LayoutMobileProps = {
 	data: Movie;
+	handleDeleteMovie: (id: string) => void;
 };
 
-export const LayoutMobile = ({ data }: LayoutMobileProps) => {
+export const LayoutMobile = ({
+	data,
+	handleDeleteMovie,
+}: LayoutMobileProps) => {
 	return (
-		<div className="w-full flex flex-col gap-2">
+		<div className="w-full flex flex-col gap-2 lg:hidden">
 			<div className="flex flex-col gap-4 items-center w-full">
-				<Image src={data.banner} alt={data.title} width={382} height={582} />
+				<Image
+					src={data.banner}
+					alt={data.title}
+					width={382}
+					height={582}
+					className="w-full h-auto object-cover rounded-md"
+				/>
 
 				<div className="flex flex-col justify-between items-center gap-2 w-full">
-					<div className="flex gap-2 w-full md:w-auto">
-						<Button className="rounded-md" variant="outline">
+					<div className="flex gap-2 w-full">
+						<Button
+							className="rounded-md"
+							variant="outline"
+							onClick={() => handleDeleteMovie(data.id)}
+						>
 							Deletar
 						</Button>
 

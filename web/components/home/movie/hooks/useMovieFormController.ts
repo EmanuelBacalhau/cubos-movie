@@ -2,10 +2,10 @@ import { useMutation } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { privateService } from '@/services/private-service';
-import { CreateMovieForm } from '../form-movie';
+import { MovieForm } from '../form-movie';
 
-export function useMovieFormController(movieToEdit?: CreateMovieForm) {
-	const form = useForm<CreateMovieForm>({
+export function useMovieFormController(movieToEdit?: MovieForm) {
+	const form = useForm<MovieForm>({
 		defaultValues: movieToEdit
 			? { ...movieToEdit }
 			: {
@@ -74,7 +74,7 @@ export function useMovieFormController(movieToEdit?: CreateMovieForm) {
 	}, []);
 
 	const onSubmit = useCallback(
-		async (data: CreateMovieForm) => {
+		async (data: MovieForm) => {
 			if (!data.fileBanner || !data.fileCover) {
 				alert('Por favor, selecione o banner e a capa do filme.');
 				return;

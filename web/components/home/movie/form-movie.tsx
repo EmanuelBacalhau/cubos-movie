@@ -13,7 +13,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useMovieFormController } from './hooks/useMovieFormController';
 
-export type CreateMovieForm = {
+export type MovieForm = {
 	title: string;
 	description: string;
 	releaseDate: string;
@@ -27,16 +27,16 @@ export type CreateMovieForm = {
 	language: string;
 	revenue: number;
 	profit: number;
-	id?: string; // Para edição
-	bannerUrl?: string; // Para edição
-	coverUrl?: string; // Para edição
+	id?: string;
+	bannerUrl?: string;
+	coverUrl?: string;
 };
 
 export const FormMovie = ({
 	movieToEdit,
 	setIsSheetOpen,
 }: {
-	movieToEdit?: CreateMovieForm;
+	movieToEdit?: MovieForm;
 	setIsSheetOpen: (isOpen: boolean) => void;
 }) => {
 	const {
