@@ -20,14 +20,6 @@ export class CreateMovieController extends Controller<'private', unknown> {
 		const response = await this.createMovieUseCase.execute({
 			...request.body,
 			userId: request.accountId,
-			fileBanner: {
-				size: 0,
-				inputType: '',
-			},
-			fileCover: {
-				size: 0,
-				inputType: '',
-			},
 		});
 
 		return {
