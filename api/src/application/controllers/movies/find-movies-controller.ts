@@ -1,13 +1,13 @@
 import { Controller } from '@application/contracts/http/controller';
 import { Movie } from '@application/entities/movie';
-import { FindMovieUseCase } from '@application/useCases/movies/find-movies-use-case';
+import { FindMoviesUseCase } from '@application/useCases/movies/find-movies-use-case';
 import { Injectable } from '@kernel/decorators/injectable';
 import { Pagination } from '@shared/types/pagination';
 import { findMoviesSchema } from './schemas/find-movies-schema';
 
 @Injectable()
 export class FindMoviesController extends Controller<'private', unknown> {
-	constructor(private readonly findMoviesUseCase: FindMovieUseCase) {
+	constructor(private readonly findMoviesUseCase: FindMoviesUseCase) {
 		super();
 	}
 
@@ -26,5 +26,5 @@ export class FindMoviesController extends Controller<'private', unknown> {
 }
 
 export namespace FindMoviesController {
-	export type Response = Pagination<Movie>;
+	export type Response = Pagination<Movie.Attributes>;
 }

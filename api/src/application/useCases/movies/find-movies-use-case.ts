@@ -6,7 +6,7 @@ import { Injectable } from '@kernel/decorators/injectable';
 import { Pagination } from '@shared/types/pagination';
 
 @Injectable()
-export class FindMovieUseCase {
+export class FindMoviesUseCase {
 	constructor(
 		private readonly movieRepository: PrismaMovieRepository,
 		private readonly s3Gateway: S3Gateway
@@ -46,5 +46,5 @@ export class FindMovieUseCase {
 
 export namespace FindMovieUseCase {
 	export interface Request extends SearchMovieParams {}
-	export type Response = Pagination<Movie>;
+	export type Response = Pagination<Movie.Attributes>;
 }
