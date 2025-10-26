@@ -35,8 +35,8 @@ model GenreMovie {
   genreId String
   movieId String
 
-  genre Genre @relation(fields: [genreId], references: [id])
-  movie Movie @relation(fields: [movieId], references: [id])
+  genre Genre @relation(fields: [genreId], references: [id], onDelete: Cascade)
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
 
   @@id([genreId, movieId])
   @@map("genre_movies")
@@ -58,7 +58,7 @@ model Movie {
   profit      Int
 
   userId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
