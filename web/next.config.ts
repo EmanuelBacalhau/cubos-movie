@@ -1,7 +1,9 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+	images: {
+		domains: ['cubos-movies-bucket.s3.sa-east-1.amazonaws.com'],
+	},
 };
 
 export default nextConfig;

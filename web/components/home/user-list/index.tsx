@@ -1,23 +1,31 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import { SearchIcon } from 'lucide-react';
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+	Sheet,
+	SheetContent,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger,
+} from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
-import { privateService } from '@/services/private-service';
+import { FormMovie } from '../movie/form-movie';
 import { CardMovie } from './card-movie';
+import { useMoviesController } from './hooks/useMoviesController';
 import { PaginationUserList } from './pagination-user-list';
 
 export const UserList = () => {
-	const [page, setPage] = useState(1);
-	const { data, isLoading, error } = useQuery({
-		queryKey: ['movies'],
-		queryFn: privateService.findMovies,
-	});
-
-	const totalPages = data?.totalPages || 1;
+	const {
+		isSheetOpen,
+		setIsSheetOpen,
+		page,
+		setPage,
+		data,
+		isLoading,
+		totalPages,
+	} = useMoviesController();
 
 	return (
 		<div className="flex flex-col gap-4 flex-1">
@@ -29,11 +37,24 @@ export const UserList = () => {
 					/>
 					<SearchIcon className="size-6" />
 				</div>
+
 				<div className="flex flex-row gap-2">
 					<Button variant="outline" className="flex-1">
 						Filtros
 					</Button>
-					<Button className="flex-1">Adicionar Filme</Button>
+
+					<Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+						<SheetTrigger asChild>
+							<Button className="flex-1">Adicionar Filme</Button>
+						</SheetTrigger>
+
+						<SheetContent className="p-4 overflow-y-auto overflow-x-hidden">
+							<SheetHeader className="px-0">
+								<SheetTitle>Adicionar Filme</SheetTitle>
+							</SheetHeader>
+							<FormMovie setIsSheetOpen={setIsSheetOpen} />
+						</SheetContent>
+					</Sheet>
 				</div>
 			</div>
 
