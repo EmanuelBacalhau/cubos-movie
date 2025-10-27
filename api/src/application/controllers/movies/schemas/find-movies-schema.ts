@@ -9,7 +9,7 @@ export const findMoviesSchema = z.object({
 	realeseEndDate: z.coerce
 		.date('"realeseDate" must be a valid date')
 		.optional(),
-	duration: z
+	duration: z.coerce
 		.number()
 		.min(1, '"duration" must be at least 1 minute')
 		.optional(),

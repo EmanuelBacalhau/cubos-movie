@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { destroyCookie, parseCookies, setCookie } from 'nookies';
 import { useCallback, useEffect, useState } from 'react';
-import { localStorageKeys } from '@/config/localstorage-keys';
+import { cookiesKeys } from '@/config/localstorage-keys';
 import { AuthContext, AuthProviderProps } from '@/contexts/auth-context';
 import { queryClient } from '@/lib/queryClient';
 import { authService } from '@/services/auth-service';
@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
 	const [signedIn, setSignedIn] = useState<boolean>(() => {
 		const cookies = parseCookies();
-		const storedAccessToken = cookies[localStorageKeys.AUTH_TOKEN];
+		const storedAccessToken = cookies[cookiesKeys.AUTH_TOKEN];
 		return !!storedAccessToken;
 	});
 
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 	const signIn = useCallback(
 		(accessToken: string) => {
 			const SEVEN_DAYS_IN_SECONDS = 60 * 60 * 24 * 7;
-			setCookie(null, localStorageKeys.AUTH_TOKEN, accessToken, {
+			setCookie(null, cookiesKeys.AUTH_TOKEN, accessToken, {
 				path: '/',
 				maxAge: SEVEN_DAYS_IN_SECONDS,
 			});
@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 	}, []);
 
 	const signOut = useCallback(() => {
-		destroyCookie(null, localStorageKeys.AUTH_TOKEN, { path: '/' });
+		destroyCookie(null, cookiesKeys.AUTH_TOKEN, { path: '/' });
 		setSignedIn(false);
 		clearMeCache();
 		router.push('/sign-in');

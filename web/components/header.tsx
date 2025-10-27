@@ -2,6 +2,7 @@
 
 import { LogOutIcon } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import logo from '../public/logo.png';
 import { ThemeSwitcher } from './theme-switcher';
@@ -13,7 +14,9 @@ export const Header = () => {
 	return (
 		<header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-sm flex justify-between items-center h-14 px-6">
 			<div className="flex items-center justify-between w-full container mx-auto">
-				<Image src={logo} alt="Logo Cubos Movies" width={200} />
+				<Link href={'/'}>
+					<Image src={logo} alt="Logo Cubos Movies" width={200} />
+				</Link>
 				<div className="flex gap-4 items-center">
 					<ThemeSwitcher />
 

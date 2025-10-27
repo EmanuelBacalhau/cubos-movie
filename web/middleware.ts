@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { localStorageKeys } from './config/localstorage-keys';
+import { cookiesKeys } from './config/localstorage-keys';
 
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
 
 	const publicRoutes = ['/sign-in', '/sign-up'];
 
-	const token = request.cookies.get(localStorageKeys.AUTH_TOKEN)?.value;
+	const token = request.cookies.get(cookiesKeys.AUTH_TOKEN)?.value;
 
 	const isPublicRoute = publicRoutes.includes(pathname);
 
@@ -33,7 +33,6 @@ export function middleware(request: NextRequest) {
 	return NextResponse.next();
 }
 
-// O seu matcher está correto, mantenha-o como está.
 export const config = {
 	matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };

@@ -1,7 +1,14 @@
 import { httpClient } from '../httpClient';
 import { Movie } from '../types/movie';
 
-type FindMoviesParams = {};
+export type FindMoviesParams = {
+	title?: string;
+	genreId?: string;
+	realeseStartDate?: Date;
+	realeseEndDate?: Date;
+	duration?: number;
+	page?: number;
+};
 
 type FindMoviesResponse = {
 	items: Movie[];
@@ -14,7 +21,9 @@ type FindMoviesResponse = {
 export const findMovies = async (
 	params: FindMoviesParams
 ): Promise<FindMoviesResponse> => {
-	const response = await httpClient.get<FindMoviesResponse>('/movies');
+	const response = await httpClient.get<FindMoviesResponse>('/movies', {
+		params,
+	});
 
 	return response.data;
 };

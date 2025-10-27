@@ -1,8 +1,24 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
 import { SearchIcon } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 import {
 	Sheet,
 	SheetContent,
@@ -11,6 +27,7 @@ import {
 	SheetTrigger,
 } from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
+import { privateService } from '@/services/private-service';
 import { FormMovie } from '../movie/form-movie';
 import { CardMovie } from './card-movie';
 import { useMoviesController } from './hooks/useMoviesController';
@@ -25,7 +42,38 @@ export const UserList = () => {
 		data,
 		isLoading,
 		totalPages,
+		setFilters,
 	} = useMoviesController();
+
+	const [filters, setLocalFilters] = useState({
+		title: '',
+		genreId: '',
+		realeseStartDate: '',
+		realeseEndDate: '',
+		duration: '',
+	});
+
+	const [isFilterDialogOpen, setIsFilterDialogOpen] = useState(false);
+
+	const { data: genresList } = useQuery({
+		queryKey: ['genres-list'],
+		queryFn: () => privateService.findGenres(),
+	});
+
+	function handleApplyFilters() {
+		setFilters({
+			title: filters.title || undefined,
+			genreId: filters.genreId || undefined,
+			realeseStartDate: filters.realeseStartDate
+				? new Date(filters.realeseStartDate)
+				: undefined,
+			realeseEndDate: filters.realeseEndDate
+				? new Date(filters.realeseEndDate)
+				: undefined,
+			duration: filters.duration ? Number(filters.duration) : undefined,
+		});
+		setIsFilterDialogOpen(false);
+	}
 
 	return (
 		<div className="flex flex-col gap-4 flex-1">
@@ -39,9 +87,98 @@ export const UserList = () => {
 				</div>
 
 				<div className="flex flex-row gap-2">
-					<Button variant="outline" className="flex-1">
-						Filtros
-					</Button>
+					<Dialog
+						open={isFilterDialogOpen}
+						onOpenChange={setIsFilterDialogOpen}
+					>
+						<DialogTrigger asChild>
+							<Button variant="outline" className="flex-1">
+								Filtros
+							</Button>
+						</DialogTrigger>
+						<DialogContent>
+							<DialogHeader>
+								<DialogTitle>Aplicar Filtros</DialogTitle>
+							</DialogHeader>
+							<div className="flex flex-col gap-4">
+								<Input
+									placeholder="Título"
+									value={filters.title}
+									onChange={e =>
+										setLocalFilters(f => ({ ...f, title: e.target.value }))
+									}
+								/>
+								<Select
+									value={filters.genreId}
+									onValueChange={value =>
+										setLocalFilters(f => ({ ...f, genreId: value }))
+									}
+								>
+									<SelectTrigger className="w-full border rounded px-2 py-1">
+										<SelectValue placeholder="Todos os gêneros" />
+									</SelectTrigger>
+									<SelectContent>
+										{genresList?.map((g: any) => (
+											<SelectItem key={g.id} value={g.id}>
+												{g.name}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+
+								<div className="flex gap-2">
+									<Input
+										type="date"
+										value={filters.realeseStartDate}
+										onChange={e =>
+											setLocalFilters(f => ({
+												...f,
+												realeseStartDate: e.target.value,
+											}))
+										}
+									/>
+									<Input
+										type="date"
+										value={filters.realeseEndDate}
+										onChange={e =>
+											setLocalFilters(f => ({
+												...f,
+												realeseEndDate: e.target.value,
+											}))
+										}
+									/>
+								</div>
+								<Input
+									type="number"
+									placeholder="Duração (horas)"
+									value={filters.duration}
+									onChange={e =>
+										setLocalFilters(f => ({ ...f, duration: e.target.value }))
+									}
+								/>
+								<Button onClick={handleApplyFilters} className="w-full mt-2">
+									Aplicar
+								</Button>
+								<Button
+									variant="secondary"
+									className="w-full"
+									onClick={() => {
+										setLocalFilters({
+											title: '',
+											genreId: '',
+											realeseStartDate: '',
+											realeseEndDate: '',
+											duration: '',
+										});
+										setFilters({});
+										setIsFilterDialogOpen(false);
+									}}
+								>
+									Limpar filtros
+								</Button>
+							</div>
+						</DialogContent>
+					</Dialog>
 
 					<Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
 						<SheetTrigger asChild>
