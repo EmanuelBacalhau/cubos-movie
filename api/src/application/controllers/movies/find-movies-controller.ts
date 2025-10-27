@@ -27,6 +27,9 @@ export class FindMoviesController extends Controller<'private', unknown> {
 
 export namespace FindMoviesController {
 	export type Response = Pagination<
-		Pick<Movie.Attributes, 'id' | 'banner' | 'votes' | 'title' | 'genres'>
+		Pick<
+			Movie.Attributes,
+			'id' | 'banner' | 'cover' | 'votes' | 'title' | 'genres'
+		>
 	>;
 }

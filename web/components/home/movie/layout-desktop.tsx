@@ -41,8 +41,10 @@ export const LayoutDesktop = ({
 				<div className="relative z-10 w-full flex flex-col gap-8">
 					<div className="flex justify-between items-center w-full">
 						<div>
-							<h1 className="text-3xl font-bold text-white">{data.title}</h1>
-							<p className="text-white">{data.originalTitle}</p>
+							<h1 className="text-3xl font-bold dark:text-white">
+								{data.title}
+							</h1>
+							<p className="dark:text-white">{data.originalTitle}</p>
 						</div>
 
 						<div className="flex gap-2 ">

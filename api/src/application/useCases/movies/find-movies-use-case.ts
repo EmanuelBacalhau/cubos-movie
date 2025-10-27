@@ -40,6 +40,7 @@ export class FindMoviesUseCase {
 		const response = moviesWithBannerUrl.map(movie => ({
 			id: movie.id,
 			banner: movie.banner,
+			cover: movie.cover,
 			votes: movie.votes,
 			title: movie.title,
 			genres: movie.genres,
@@ -58,6 +59,9 @@ export class FindMoviesUseCase {
 export namespace FindMoviesUseCase {
 	export interface Request extends SearchMovieParams {}
 	export type Response = Pagination<
-		Pick<Movie.Attributes, 'id' | 'banner' | 'votes' | 'title' | 'genres'>
+		Pick<
+			Movie.Attributes,
+			'id' | 'banner' | 'cover' | 'votes' | 'title' | 'genres'
+		>
 	>;
 }
