@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { SearchIcon } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -31,9 +30,9 @@ import { privateService } from '@/services/private-service';
 import { FormMovie } from '../movie/form-movie';
 import { CardMovie } from './card-movie';
 import { useMoviesController } from './hooks/useMoviesController';
-import { PaginationUserList } from './pagination-user-list';
+import { PaginationMovieList } from './pagination-movie-list';
 
-export const UserList = () => {
+export const MovieList = () => {
 	const {
 		isSheetOpen,
 		setIsSheetOpen,
@@ -78,14 +77,6 @@ export const UserList = () => {
 	return (
 		<div className="flex flex-col gap-4 flex-1">
 			<div className="flex flex-col justify-end gap-2 md:flex-row">
-				<div className="flex gap-2 items-center bg-input/30 pl-1 pr-2 border border-input rounded-lg flex-1 md:max-w-sm">
-					<Input
-						placeholder="Pesquisar..."
-						className="dark:bg-transparent bg-transparent border-none flex-1"
-					/>
-					<SearchIcon className="size-6" />
-				</div>
-
 				<div className="flex flex-row gap-2">
 					<Dialog
 						open={isFilterDialogOpen}
@@ -204,15 +195,22 @@ export const UserList = () => {
 			)}
 
 			<div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5 flex-1">
-				{data?.items.map(movie => (
-					<CardMovie key={movie.id} movie={movie} />
-				))}
+				{!isLoading && data?.items.length === 0 ? (
+					<div className="col-span-full py-10 flex items-center justify-center">
+						<p className="text-center text-muted-foreground">
+							Nenhum filme encontrado.
+						</p>
+					</div>
+				) : (
+					data?.items.map(movie => <CardMovie key={movie.id} movie={movie} />)
+				)}
+				{}
 			</div>
 
 			{isLoading ? (
 				<Skeleton className="h-10 w-full" />
 			) : (
-				<PaginationUserList
+				<PaginationMovieList
 					page={page}
 					setPage={setPage}
 					totalPages={totalPages}

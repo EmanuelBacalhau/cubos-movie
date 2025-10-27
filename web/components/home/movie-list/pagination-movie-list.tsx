@@ -13,7 +13,7 @@ type PaginationProps = {
 	totalPages: number;
 };
 
-export const PaginationUserList = ({
+export const PaginationMovieList = ({
 	page,
 	setPage,
 	totalPages,

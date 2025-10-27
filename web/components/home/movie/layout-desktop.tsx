@@ -12,9 +12,9 @@ import {
 import { Movie } from '@/services/types/movie';
 import { formatCurrencyToShort } from '@/utils/format-currency-to-short';
 import { formatHours } from '@/utils/format-hours';
-import { CircleVotes } from '../user-list/circle-votes';
 import { CardDetails } from './card-detail';
 import { FormMovie } from './form-movie';
+import { CircleVotes } from '../movie-list/circle-votes';
 
 type LayoutMobileProps = {
 	data: Movie;
@@ -189,13 +189,12 @@ export const LayoutDesktop = ({
 						<iframe
 							width="100%"
 							height="100%"
-							src={data.trailerUrl}
+							src={data.trailerUrl.replace('watch?v=', 'embed/')}
 							title="YouTube video player"
-							frameBorder="0"
 							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 							allowFullScreen
 							className="rounded-md w-full h-full"
-						/>
+						></iframe>
 					</div>
 				) : (
 					<span className="text-muted-foreground">Trailer não disponível.</span>

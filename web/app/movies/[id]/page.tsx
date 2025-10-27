@@ -11,19 +11,18 @@ import { privateService } from '@/services/private-service';
 const MoviesDetails = () => {
 	const router = useRouter();
 	const { handleDeleteMovie, isDeleted } = useMovieDetailsController();
-
-	useEffect(() => {
-		if (isDeleted) {
-			router.push('/');
-		}
-	}, [isDeleted, router]);
-
 	const paramas = useParams() as { id: string };
 
-	const { data, isLoading } = useQuery({
+	const { data, isLoading, isError } = useQuery({
 		queryKey: ['movie-details', paramas.id],
 		queryFn: () => privateService.findMovieById({ id: paramas.id }),
 	});
+
+	useEffect(() => {
+		if (isDeleted || isError) {
+			router.push('/');
+		}
+	}, [isDeleted, router, isError]);
 
 	if (isLoading) {
 		return null;

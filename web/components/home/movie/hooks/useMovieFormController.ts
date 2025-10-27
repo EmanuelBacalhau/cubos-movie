@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { queryClient } from '@/lib/queryClient';
 import { privateService } from '@/services/private-service';
 import { MovieEditForm, MovieForm } from '../form-movie';
 
@@ -145,6 +146,10 @@ export function useMovieFormController(movieToEdit?: MovieEditForm) {
 				await fetch(uploadCoverSignature.url, {
 					method: 'POST',
 					body: coverFormData,
+				});
+
+				queryClient.invalidateQueries({
+					queryKey: ['movies'],
 				});
 			} else {
 				const { fileBanner, fileCover, ...rest } = data;
