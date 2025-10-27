@@ -1,6 +1,6 @@
 # Cubos Movies
 
-Sistema completo para cadastro, listagem e gerenciamento de filmes, com autenticação de usuários, painel administrativo e envio de e-mails. O projeto é dividido em duas aplicações: API (backend) e Web (frontend).
+Sistema completo para cadastro, listagem e gerenciamento de filmes, com autenticação de usuários e envio de e-mails. O projeto é dividido em duas aplicações: API (backend) e Web (frontend).
 
 ---
 
