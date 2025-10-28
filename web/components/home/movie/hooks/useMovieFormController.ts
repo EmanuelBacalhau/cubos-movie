@@ -174,8 +174,8 @@ export function useMovieFormController(movieToEdit?: MovieEditForm) {
 		removeBanner,
 		removeCover,
 		onSubmit,
-		isLoading: isCreatePending,
-		isSuccess: isCreateSuccess,
+		isLoading: isCreatePending || isUpdatePending,
+		isSuccess: isCreateSuccess || isUpdateSuccess,
 		genresList,
 	};
 }

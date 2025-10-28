@@ -5,7 +5,6 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useMovieDetailsController } from '@/components/home/movie/hooks/useMovieDetials';
 import { LayoutDesktop } from '@/components/home/movie/layout-desktop';
-import { LayoutMobile } from '@/components/home/movie/layout-mobile';
 import { privateService } from '@/services/private-service';
 
 const MoviesDetails = () => {
@@ -30,7 +29,6 @@ const MoviesDetails = () => {
 
 	return (
 		<div className="p-4">
-			<LayoutMobile data={data!} handleDeleteMovie={handleDeleteMovie} />
 			<LayoutDesktop data={data!} handleDeleteMovie={handleDeleteMovie} />
 		</div>
 	);

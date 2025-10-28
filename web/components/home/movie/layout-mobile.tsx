@@ -3,11 +3,11 @@ import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-	Sheet,
-	SheetContent,
-	SheetHeader,
-	SheetTitle,
-	SheetTrigger,
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
 } from '@/components/ui/sheet';
 import { Movie } from '@/services/types/movie';
 import { formatCurrencyToShort } from '@/utils/format-currency-to-short';
@@ -142,26 +142,6 @@ export const LayoutMobile = ({
 					value={formatCurrencyToShort(data.revenue)}
 				/>
 				<CardDetails title="Lucro" value={formatCurrencyToShort(data.profit)} />
-			</div>
-
-			<div>
-				<h2 className="text-3xl font-bold">Trailer</h2>
-				{data.trailerUrl ? (
-					<div className="aspect-video w-full mt-2">
-						<iframe
-							width="100%"
-							height="100%"
-							src={data.trailerUrl.replace('watch?v=', 'embed/')}
-							title="YouTube video player"
-							frameBorder="0"
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-							allowFullScreen
-							className="rounded-md w-full h-full"
-						/>
-					</div>
-				) : (
-					<span className="text-muted-foreground">Trailer não disponível.</span>
-				)}
 			</div>
 		</div>
 	);

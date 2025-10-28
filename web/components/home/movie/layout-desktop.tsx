@@ -3,11 +3,11 @@ import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-	Sheet,
-	SheetContent,
-	SheetHeader,
-	SheetTitle,
-	SheetTrigger,
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
 } from '@/components/ui/sheet';
 import { Movie } from '@/services/types/movie';
 import { formatCurrencyToShort } from '@/utils/format-currency-to-short';
@@ -15,6 +15,7 @@ import { formatHours } from '@/utils/format-hours';
 import { CardDetails } from './card-detail';
 import { FormMovie } from './form-movie';
 import { CircleVotes } from '../movie-list/circle-votes';
+import { LayoutMobile } from './layout-mobile';
 
 type LayoutMobileProps = {
 	data: Movie;
@@ -28,8 +29,8 @@ export const LayoutDesktop = ({
 	const [isSheetOpen, setIsSheetOpen] = useState(false);
 
 	return (
-		<div className="space-y-8 hidden lg:flex flex-col">
-			<div className="relative w-full p-8">
+		<div className="space-y-8">
+			<div className="relative w-full p-8 hidden lg:flex flex-col">
 				<Image
 					src={data.banner}
 					alt={data.title}
@@ -182,6 +183,8 @@ export const LayoutDesktop = ({
 				</div>
 			</div>
 
+      <LayoutMobile data={data} handleDeleteMovie={handleDeleteMovie} />
+
 			<div>
 				<h2 className="text-3xl font-bold">Trailer</h2>
 				{data.trailerUrl ? (
@@ -189,12 +192,18 @@ export const LayoutDesktop = ({
 						<iframe
 							width="100%"
 							height="100%"
-							src={data.trailerUrl.replace('watch?v=', 'embed/')}
+							src={
+								data.trailerUrl.includes('youtube')
+									? data.trailerUrl.replace('watch?v=', 'embed/')
+									: data.trailerUrl
+							}
 							title="YouTube video player"
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-							allowFullScreen
 							className="rounded-md w-full h-full"
-						></iframe>
+							frameBorder="0"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+							allowFullScreen
+							loading="lazy"
+						/>
 					</div>
 				) : (
 					<span className="text-muted-foreground">Trailer não disponível.</span>
