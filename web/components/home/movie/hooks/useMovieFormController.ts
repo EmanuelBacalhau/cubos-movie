@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { queryClient } from '@/lib/queryClient';
 import { privateService } from '@/services/private-service';
 import { MovieEditForm, MovieForm } from '../form-movie';
+import { toast } from 'sonner';
 
 export function useMovieFormController(movieToEdit?: MovieEditForm) {
 	const { data: genresList } = useQuery({
@@ -103,7 +104,7 @@ export function useMovieFormController(movieToEdit?: MovieEditForm) {
 			const hasBanner = data.fileBanner || movieToEdit?.bannerUrl;
 			const hasCover = data.fileCover || movieToEdit?.coverUrl;
 			if (!hasBanner || !hasCover) {
-				alert('Por favor, selecione o banner e a capa do filme.');
+        toast.error('Erro: Banner e capa são obrigatórios.');
 				return;
 			}
 			if (
@@ -112,7 +113,7 @@ export function useMovieFormController(movieToEdit?: MovieEditForm) {
 				(data.fileCover &&
 					(!(data.fileCover instanceof File) || data.fileCover.size === 0))
 			) {
-				alert('Arquivo de banner ou capa inválido. Selecione novamente.');
+        toast.error('Erro: Arquivo de banner ou capa inválido.');
 				return;
 			}
 
@@ -155,6 +156,10 @@ export function useMovieFormController(movieToEdit?: MovieEditForm) {
 				const { fileBanner, fileCover, ...rest } = data;
 
 				await mutateUpdateAsync(rest);
+
+        queryClient.invalidateQueries({
+					queryKey: ['movies'],
+				});
 			}
 		},
 		[
