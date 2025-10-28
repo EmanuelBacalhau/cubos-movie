@@ -9,8 +9,8 @@ export const useMoviesController = () => {
 	const [page, setPage] = useState(1);
 	const [filters, setFilters] = useState<FindMoviesParams>({});
 
-	const { data, isLoading, error } = useQuery({
-		queryKey: ['movies'],
+	const { data, isLoading, error, } = useQuery({
+		queryKey: ['movies', page, filters],
 		queryFn: () => privateService.findMovies({ page, ...filters }),
 		retry: 1,
 	});
