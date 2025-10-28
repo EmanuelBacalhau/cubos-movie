@@ -15,7 +15,6 @@ fastifyServer.register(cors, {
 	methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
 });
 
-
 fastifyServer.register(fastifyJwt, {
 	secret: process.env.JWT_SECRET as string,
 });
