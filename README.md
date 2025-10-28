@@ -89,16 +89,15 @@ cd cubos-movie
 
 ### 2. Configuração da API
 ```bash
-cd api
 cp .env.example .env # Preencha as variáveis de ambiente
 pnpm install
+pnpm prisma migrate dev # Em desenvolvimento
 pnpm build
 pnpm start # ou pnpm dev para modo desenvolvimento
 ```
 
 ### 3. Configuração do Web
 ```bash
-cd ../web
 pnpm install
 pnpm dev # Acesse http://localhost:3000
 ```
@@ -116,6 +115,8 @@ EMAIL=seu@email.com
 AWS_REGION=sa-east-1
 AWS_S3_BUCKET_NAME=nome-do-bucket
 FRONTEND_URL=http://localhost:3000
+AWS_ACCESS_KEY_ID=sua-key
+AWS_SECRET_ACCESS_KEY=sua-secret
 ```
 
 ---
